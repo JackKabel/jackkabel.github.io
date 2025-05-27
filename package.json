@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "postbuild": "cp src/404.html dist/work-r/404.html"
+    "postbuild": "cp ./dist/work-r/browser/index.html ./dist/work-r/browser/404.html"
+
   },
   "private": true,
   "dependencies": {
