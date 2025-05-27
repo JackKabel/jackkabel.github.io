@@ -1,0 +1,16 @@
+ion-button[slot='fixed'] {
+  bottom: 0;
+  right: 0;
+  border-radius: 50%;
+}
+
+.about-text {
+  text-align: justify;
+  h2 i {
+    color: var(--ion-color-primary-tint);
+  }
+  p ion-icon {
+    margin-right: 1rem;
+    color: var(--ion-color-primary);
+  }
+}

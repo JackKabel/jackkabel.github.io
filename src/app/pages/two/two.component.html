@@ -1,0 +1,12 @@
+<ion-content class="ion-padding">
+  <h2>Work History</h2>
+  <ion-list>
+    <ion-item *ngFor="let entry of entries">
+      <ion-label>
+        <h3>{{ entry.date | date }}</h3>
+        <p>Hours: <ion-text color="primary">{{ entry.hours }}</ion-text></p>
+        <p *ngIf="entry.note">{{ entry.note }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

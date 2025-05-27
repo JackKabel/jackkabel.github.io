@@ -1,0 +1,71 @@
+<ion-content class="ion-padding ion-text-center">
+  <div class="about-text">
+    <h2>About <i>WorkR</i></h2>
+    <p>
+      <ion-icon name="time-outline"></ion-icon>
+      <strong>WorkR</strong> helps you keep track of your <strong>daily working hours</strong> and any <strong>extra/overtime</strong>
+      you accumulate.
+    </p>
+
+    <p>
+      <ion-icon name="checkmark-done-outline"></ion-icon>
+      Ideal for freelancers, shift workers, or anyone managing flexible work hours.
+    </p>
+
+    <p>
+      <ion-icon name="calendar-outline"></ion-icon>
+      Easily <strong>log your hours</strong>, view your <strong>work history</strong>, and stay organized.
+    </p>
+
+    <p>
+      <ion-icon name="flash-outline"></ion-icon>
+      Built with <strong>Ionic</strong> and <strong>Angular</strong> for a fast, modern, mobile-first experience.
+    </p>
+
+    <p>
+      <ion-icon name="cloud-offline-outline"></ion-icon>
+      Fully functional <strong>offline</strong>, so you can track hours anywhere, anytime.
+    </p>
+  </div>
+
+  <ion-button class="ion-margin" expand="block" id="open-modal" shape="round" slot="fixed">
+    <ion-icon name="add-outline" slot="icon-only" size="large"></ion-icon>
+  </ion-button>
+  <ion-modal trigger="open-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Log Work Hours</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-item>
+          <ion-datetime [(ngModel)]="date" firstDayOfWeek="1" presentation="date"></ion-datetime>
+        </ion-item>
+        <ion-item>
+          <ion-input [(ngModel)]="hours" label="Hours worked in plus" labelPlacement="floating" type="number"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input [(ngModel)]="note" label="Note" labelPlacement="floating" type="text"></ion-input>
+        </ion-item>
+      </ion-content>
+      <ion-footer id="footer">
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()" color="danger">Cancel</ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirm()" color="success">Confirm</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+  <ion-toast [isOpen]="isToastOpen"
+             message="Saved sucessfully"
+             positionAnchor="open-modal"
+             icon="checkmark-circle-outline"
+             class="custom-toast"
+             [duration]="50000"></ion-toast>
+</ion-content>
+
