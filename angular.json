@@ -66,6 +66,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/WorkR/",
               "budgets": [
                 {
                   "type": "initial",
@@ -133,7 +134,8 @@
           "configurations": {
             "production": {
               "cordovaBuildTarget": "WorkR:ionic-cordova-build:production",
-              "devServerTarget": "WorkR:serve:production"
+              "devServerTarget": "WorkR:serve:production",
+              "baseHref": "/WorkR/"
             }
           }
         },
@@ -144,7 +146,8 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "WorkR:build:production"
+              "browserTarget": "WorkR:build:production",
+              "baseHref": "/WorkR/"
             }
           }
         }
