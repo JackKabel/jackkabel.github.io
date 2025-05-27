@@ -29,7 +29,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20 # Angular 19 works best with Node 18 or 20
+          node-version: 20
 
       - name: Install dependencies
         run: npm install
@@ -46,7 +46,7 @@ jobs:
       - name: Upload build output
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/work-r # ← This must match your "outputPath" in angular.json
+          path: dist/work-r
 
       - name: Deploy to GitHub Pages
         id: deployment
