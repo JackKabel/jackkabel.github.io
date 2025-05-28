@@ -46,7 +46,7 @@ jobs:
       - name: Upload build output
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/work-r
+          path: dist/work-r/browser
 
       - name: Deploy to GitHub Pages
         id: deployment
