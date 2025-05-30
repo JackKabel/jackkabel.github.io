@@ -9,7 +9,10 @@ import {
   flashOutline,
   cloudOfflineOutline,
   informationCircleOutline,
-  checkmarkCircleOutline
+  checkmarkCircleOutline,
+  settingsOutline,
+  trashOutline,
+  alertCircleOutline
 } from 'ionicons/icons';
 
 export function registerIcons() {
@@ -23,6 +26,9 @@ export function registerIcons() {
     flashOutline,
     cloudOfflineOutline,
     informationCircleOutline,
-    checkmarkCircleOutline
+    checkmarkCircleOutline,
+    settingsOutline,
+    trashOutline,
+    alertCircleOutline
   });
 }

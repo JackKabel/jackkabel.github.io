@@ -1,0 +1,12 @@
+ion-card {
+  border: 1px solid var(--ion-color-primary-tint);
+}
+ion-card-title {
+  font-size: 1.25rem;
+}
+.month-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+}

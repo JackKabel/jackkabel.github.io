@@ -1,12 +1,25 @@
 <ion-content class="ion-padding">
   <h2>Work History</h2>
-  <ion-list>
-    <ion-item *ngFor="let entry of entries">
-      <ion-label>
-        <h3>{{ entry.date | date }}</h3>
-        <p>Hours: <ion-text color="primary">{{ entry.hours }}</ion-text></p>
-        <p *ngIf="entry.note">{{ entry.note }}</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+
+  <ion-accordion-group>
+    <ion-accordion *ngFor="let group of groupedEntries() | keyvalue" value="{{ group.key }}">
+      <ion-item slot="header" color="light">
+        <ion-label>{{ group.key! | date:'MMMM yyyy' }}</ion-label>
+      </ion-item>
+      <div slot="content">
+          <div class="month-header">
+            <ion-chip color="primary">Total hours: {{ calcTotal(group.value!) }}</ion-chip>
+          </div>
+        <ion-list>
+          <ion-item *ngFor="let entry of group.value">
+            <ion-label>
+              <h3>{{ entry.date | date }}</h3>
+              <p>Hours: <ion-text color="secondary">{{ entry.hours }}</ion-text></p>
+              <p *ngIf="entry.note">{{ entry.note }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
 </ion-content>

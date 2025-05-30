@@ -1,0 +1,21 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Manage data</ion-card-title>
+    <ion-card-subtitle>Data & Privacy</ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content class="ion-text-center">
+    <ion-button expand="block" fill="outline" color="danger" (click)="clearData()">
+      Clear all records
+    </ion-button>
+    <ion-chip color="danger">
+      This action cannot be undone
+    </ion-chip>
+  </ion-card-content>
+</ion-card>
+
+<ion-toast [isOpen]="isToastOpen"
+           message="Data cleared successfully!"
+           position="middle"
+           color="danger"
+           icon="checkmark-circle-outline"
+           [duration]="5000"></ion-toast>
