@@ -5,7 +5,7 @@ import {OneComponent} from './pages/one/one.component';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'home/about',
     pathMatch: 'full'
   },
   {
