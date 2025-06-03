@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {IonBadge, IonContent, IonIcon} from '@ionic/angular/standalone';
+import {IonBadge, IonContent, IonIcon, IonText} from '@ionic/angular/standalone';
 import {FormsModule} from '@angular/forms';
 
 
@@ -11,7 +11,8 @@ import {FormsModule} from '@angular/forms';
     IonContent,
     IonIcon,
     FormsModule,
-    IonBadge
+    IonBadge,
+    IonText
   ]
 })
 export class AboutComponent {
