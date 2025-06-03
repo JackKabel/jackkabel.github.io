@@ -1,22 +1,16 @@
+import {ChangeDetectorRef, Component, signal, WritableSignal} from '@angular/core';
 import {
-  ChangeDetectorRef,
-  Component,
-  computed,
-  signal,
-  WritableSignal
-} from '@angular/core';
-import {
+  IonAccordion,
+  IonAccordionGroup,
+  IonChip,
   IonContent,
   IonItem,
   IonLabel,
   IonList,
   IonText,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  ViewWillEnter, IonAccordion, IonAccordionGroup, IonListHeader, IonChip
+  ViewWillEnter
 } from '@ionic/angular/standalone';
-import {DatePipe, NgForOf, NgIf, KeyValuePipe} from '@angular/common';
+import {DatePipe, KeyValuePipe, NgForOf, NgIf} from '@angular/common';
 import {WorkEntry, WorkEntryService} from '../../core/work-entry.service';
 
 @Component({
@@ -32,21 +26,18 @@ import {WorkEntry, WorkEntryService} from '../../core/work-entry.service';
     NgIf,
     NgForOf,
     IonText,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
     DatePipe,
     KeyValuePipe,
     IonAccordion,
     IonAccordionGroup,
-    IonListHeader,
     IonChip
   ]
 })
 export class TwoComponent implements ViewWillEnter {
   groupedEntries: WritableSignal<Map<string, WorkEntry[]>> = signal(new Map());
 
-  constructor(private service: WorkEntryService, private cdr: ChangeDetectorRef) {}
+  constructor(private service: WorkEntryService, private cdr: ChangeDetectorRef) {
+  }
 
   async ionViewWillEnter() {
     const entries = await this.service.getEntries();

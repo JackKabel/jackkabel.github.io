@@ -10,11 +10,13 @@ import {
   IonInput,
   IonItem,
   IonModal,
-  IonTitle, IonToast,
-  IonToolbar
+  IonTitle,
+  IonToast,
+  IonToolbar,
+  IonBadge
 } from '@ionic/angular/standalone';
 import {FormsModule} from '@angular/forms';
-import {WorkEntry, WorkEntryService} from '../../core/work-entry.service';
+import {WorkEntryService} from '../../core/work-entry.service';
 
 
 @Component({
@@ -35,7 +37,8 @@ import {WorkEntry, WorkEntryService} from '../../core/work-entry.service';
     IonHeader,
     IonTitle,
     IonItem,
-    IonToast
+    IonToast,
+    IonBadge
   ]
 })
 export class OneComponent implements OnInit {
@@ -45,7 +48,8 @@ export class OneComponent implements OnInit {
   @ViewChild(IonModal) modal!: IonModal;
   isToastOpen = false;
 
-  constructor(private workEntryService: WorkEntryService) { }
+  constructor(private workEntryService: WorkEntryService) {
+  }
 
   ngOnInit() {
   }

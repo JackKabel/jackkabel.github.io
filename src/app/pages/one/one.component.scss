@@ -4,6 +4,11 @@ ion-button[slot='fixed'] {
   border-radius: 50%;
 }
 
+ion-badge[slot='fixed'] {
+  bottom: 0;
+  left: 0;
+}
+
 .about-text {
   text-align: justify;
   h2 i {
