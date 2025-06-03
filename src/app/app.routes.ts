@@ -1,6 +1,6 @@
 import {Routes} from '@angular/router';
 import {HomeComponent} from './pages/home/home.component';
-import {OneComponent} from './pages/one/one.component';
+import {AboutComponent} from './pages/about/about.component';
 
 export const routes: Routes = [
   {
@@ -14,12 +14,12 @@ export const routes: Routes = [
     children: [
       {
         path: 'about',
-        component: OneComponent,
+        component: AboutComponent,
       },
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./pages/two/two.component').then(m => m.TwoComponent),
+          import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
       },
       {
         path: 'settings',

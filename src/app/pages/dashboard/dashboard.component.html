@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title *ngIf="!activeGroup()">Work History</ion-title>
+    <ion-chip *ngIf="activeGroup()" slot="start" color="primary">Total entries: {{ activeGroup()!.entries!.length }}
+    </ion-chip>
+    <ion-chip *ngIf="activeGroup()" slot="end" color="primary">Total hours: {{ calcTotal(activeGroup()?.entries!) }}
+    </ion-chip>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding content-relative">
+  <ion-refresher slot="fixed" pullMin="150"  (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content
+      pullingText="Pull to refresh"
+      refreshingText="Refreshing..."
+    ></ion-refresher-content>
+  </ion-refresher>
+  <ion-accordion-group expand="inset" [value]="activeGroup()?.month" (ionChange)="setActiveGroup($event)">
+    <ng-container *ngFor="let group of groupedEntries() | keyvalue">
+      <ion-accordion value="{{ group.key }}">
+        <ion-item slot="header" color="light">
+          <ion-back-button></ion-back-button>
+
+          <ion-label>{{ group.key! | date:'MMMM yyyy' }}</ion-label>
+        </ion-item>
+        <div slot="content">
+          <ion-list>
+            <ion-item *ngFor="let entry of group.value">
+              <ion-label>
+                <div class="grid">
+                  <h3 class="day">
+                    <ion-text
+                      [color]="(entry.date | date: 'EEEE')?.at(0) == 'S' ? 'danger' : 'undefined'">{{ entry.date | date: 'MMMM d' }}
+                    </ion-text>
+                    <ion-text color="medium">{{ entry.date | date: 'EEEE' }}</ion-text>
+                  </h3>
+                  <p class="hours">Hours:
+                    <ion-text color="secondary">{{ entry.hours }}</ion-text>
+                  </p>
+                  <p class="note" *ngIf="entry.note">{{ entry.note }}</p>
+                </div>
+
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+      </ion-accordion>
+    </ng-container>
+  </ion-accordion-group>
+  <ion-button class="add-btn" expand="block" id="open-modal" shape="round" size="large">
+    <ion-icon name="add-outline" slot="icon-only" size="large"></ion-icon>
+  </ion-button>
+  <ion-modal trigger="open-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>
+            Add work hours
+          </ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="modal-content">
+          <ion-datetime [(ngModel)]="date" firstDayOfWeek="1" presentation="date"></ion-datetime>
+          <ion-input [(ngModel)]="hours" color="primary" label="Hours to add" labelPlacement="floating" type="number"></ion-input>
+          <ion-input [(ngModel)]="note" color="primary" label="Note" labelPlacement="floating" type="text"></ion-input>
+        </div>
+      </ion-content>
+      <ion-footer>
+        <ion-toolbar class="ion-padding">
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()" size="large" color="danger">Cancel</ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <ion-button (click)="save()" size="large" color="primary">Save</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+  <ion-toast [isOpen]="isToastOpen"
+             message="Entry saved successfully"
+             positionAnchor="open-modal"
+             icon="checkmark-circle-outline"
+             [duration]="3000"></ion-toast>
+</ion-content>
