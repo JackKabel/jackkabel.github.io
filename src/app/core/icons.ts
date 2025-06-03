@@ -12,7 +12,15 @@ import {
   checkmarkCircleOutline,
   settingsOutline,
   trashOutline,
-  alertCircleOutline
+  alertCircleOutline,
+  shareOutline,
+  codeDownloadOutline,
+  logoAndroid,
+  ellipsisVertical,
+  cloudDownloadOutline,
+  warningOutline,
+  desktopOutline,
+  downloadOutline
 } from 'ionicons/icons';
 
 export function registerIcons() {
@@ -29,6 +37,14 @@ export function registerIcons() {
     checkmarkCircleOutline,
     settingsOutline,
     trashOutline,
-    alertCircleOutline
+    alertCircleOutline,
+    shareOutline,
+    codeDownloadOutline,
+    logoAndroid,
+    ellipsisVertical,
+    cloudDownloadOutline,
+    warningOutline,
+    desktopOutline,
+    downloadOutline
   });
 }

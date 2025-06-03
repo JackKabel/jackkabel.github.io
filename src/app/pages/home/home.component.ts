@@ -1,5 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {IonIcon, IonTabBar, IonTabButton, IonTabs} from '@ionic/angular/standalone';
+import {Component} from '@angular/core';
+import {IonBadge, IonIcon, IonTabBar, IonTabButton, IonTabs} from '@ionic/angular/standalone';
+import {NgIf} from '@angular/common';
+import {StandaloneService} from '../../core/standalone.service';
 
 @Component({
   selector: 'app-home',
@@ -9,15 +11,16 @@ import {IonIcon, IonTabBar, IonTabButton, IonTabs} from '@ionic/angular/standalo
     IonTabs,
     IonTabBar,
     IonTabButton,
-    IonIcon
+    IonIcon,
+    IonBadge,
+    NgIf
   ]
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
 
-  constructor() {
+  isStandalone = false;
+
+  constructor(protected standaloneService: StandaloneService) {
+    this.isStandalone = this.standaloneService.isStandalone;
   }
-
-  ngOnInit() {
-  }
-
 }
