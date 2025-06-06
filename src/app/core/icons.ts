@@ -20,7 +20,10 @@ import {
   cloudDownloadOutline,
   warningOutline,
   desktopOutline,
-  downloadOutline
+  downloadOutline,
+  documentTextOutline,
+  createOutline,
+  trashBinOutline
 } from 'ionicons/icons';
 
 export function registerIcons() {
@@ -45,6 +48,9 @@ export function registerIcons() {
     cloudDownloadOutline,
     warningOutline,
     desktopOutline,
-    downloadOutline
+    downloadOutline,
+    documentTextOutline,
+    createOutline,
+    trashBinOutline
   });
 }

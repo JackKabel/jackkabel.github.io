@@ -1,11 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Storage} from '@ionic/storage-angular';
-
-export interface WorkEntry {
-  date: string;
-  hours: number;
-  note?: string;
-}
+import {WorkEntry} from '../models/work-entry.model';
+import {WorkFlow} from '../models/work-flow.model';
 
 const STORAGE_KEY = 'work-entries';
 
@@ -23,8 +19,14 @@ export class WorkEntryService {
   }
 
   async getEntries(): Promise<WorkEntry[]> {
-    await this.ready; // waiting for init
+    await this.ready;
     return (await this._storage?.get(STORAGE_KEY)) || [];
+  }
+
+  async getEntriesByFlowId(flowId: string): Promise<WorkEntry[]> {
+    await this.ready;
+    const entries = await this.getEntries();
+    return entries.filter(entry => entry.flowId === flowId);
   }
 
   async addEntry(entry: WorkEntry): Promise<void> {
@@ -32,6 +34,25 @@ export class WorkEntryService {
     const entries = await this.getEntries();
     entries.push(entry);
     await this._storage?.set(STORAGE_KEY, entries);
+  }
+
+  async deleteEntry(entryId: string): Promise<void> {
+    await this.ready;
+    const entries = await this.getEntries();
+    const updatedEntries = entries.filter(entry => entry.id !== entryId);
+    await this._storage?.set(STORAGE_KEY, updatedEntries);
+  }
+
+  async getFlows(): Promise<WorkFlow[]> {
+    await this.ready;
+    return (await this._storage?.get('work-flows')) || [];
+  }
+
+  async addFlow(flow: WorkFlow): Promise<void> {
+    await this.ready;
+    const flows = await this.getFlows();
+    flows.push(flow);
+    await this._storage?.set('work-flows', flows);
   }
 
   async clearAll(): Promise<void> {
