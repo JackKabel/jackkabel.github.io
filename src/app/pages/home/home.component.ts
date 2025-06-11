@@ -16,8 +16,6 @@ import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-ne
     IonIcon,
     IonBadge,
     NgIf,
-    AddNewEntryModalComponent,
-    AddNewFlowModalComponent
   ]
 })
 export class HomeComponent {

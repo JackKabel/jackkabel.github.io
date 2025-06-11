@@ -23,6 +23,7 @@ import {WorkEntry} from '../../models/work-entry.model';
   selector: 'app-add-new-entry-modal',
   templateUrl: './add-new-entry-modal.component.html',
   styleUrls: ['./add-new-entry-modal.component.scss'],
+  standalone: true,
   imports: [
     IonHeader,
     IonToolbar,

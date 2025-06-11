@@ -22,6 +22,7 @@ import {WorkFlow} from '../../models/work-flow.model';
   selector: 'app-add-new-flow-modal',
   templateUrl: './add-new-flow-modal.component.html',
   styleUrls: ['./add-new-flow-modal.component.scss'],
+  standalone: true,
   imports: [
     FormsModule,
     IonButton,

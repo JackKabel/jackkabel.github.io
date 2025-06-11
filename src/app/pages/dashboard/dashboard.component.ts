@@ -73,10 +73,13 @@ import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-ne
     IonCardSubtitle,
     IonCardContent,
     IonPopover,
+    AddNewEntryModalComponent,
+    AddNewFlowModalComponent
   ]
 })
 export class DashboardComponent implements ViewWillEnter, AfterViewInit {
   @ViewChild(IonContent) content!: IonContent;
+  _modals = [AddNewEntryModalComponent, AddNewFlowModalComponent];
 
   flows = signal<WorkFlow[]>([]);
   entries = signal<WorkEntry[]>([]);
@@ -125,6 +128,10 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    if (this._modals) {
+      console.log(AddNewEntryModalComponent);
+      console.log(AddNewFlowModalComponent);
+    }
     const observer = new IntersectionObserver(
       ([entry]) => {
         this.isStuck = !entry.isIntersecting;
