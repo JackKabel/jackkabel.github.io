@@ -12,10 +12,10 @@ import {
   IonTextarea,
   IonTitle,
   IonToolbar,
+  ModalController,
   ToastController
 } from "@ionic/angular/standalone";
 import {WorkEntryService} from '../../core/work-entry.service';
-import {IonicModule, ModalController} from '@ionic/angular';
 import {WorkFlow} from '../../models/work-flow.model';
 import {CommonModule} from '@angular/common';
 
@@ -25,7 +25,7 @@ import {CommonModule} from '@angular/common';
   styleUrls: ['./add-new-flow-modal.component.scss'],
   standalone: true,
   imports: [
-    IonicModule, CommonModule,
+    CommonModule,
     FormsModule,
     IonButton,
     IonButtons,

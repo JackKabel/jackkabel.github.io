@@ -12,7 +12,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
-    provideIonicAngular({}),
+    provideIonicAngular(),
     importProvidersFrom(IonicStorageModule.forRoot()),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),

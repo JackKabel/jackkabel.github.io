@@ -26,6 +26,9 @@ import {
   IonSegmentButton,
   IonText,
   IonToolbar,
+  LoadingController,
+  ModalController,
+  RefresherCustomEvent,
   ToastController,
   ViewWillEnter
 } from '@ionic/angular/standalone';
@@ -34,7 +37,6 @@ import {WorkEntryService} from '../../core/work-entry.service';
 import {FormsModule} from '@angular/forms';
 import {WorkFlow} from '../../models/work-flow.model';
 import {WorkEntry} from '../../models/work-entry.model';
-import {IonicModule, LoadingController, ModalController, RefresherCustomEvent} from '@ionic/angular';
 import {AddNewEntryModalComponent} from '../../features/add-new-entry-modal/add-new-entry-modal.component';
 import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-new-flow-modal.component';
 
@@ -44,7 +46,7 @@ import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-ne
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
   imports: [
-    IonicModule, CommonModule,
+    CommonModule,
     IonContent,
     IonItem,
     IonList,
@@ -116,9 +118,6 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
   private modalController = inject(ModalController);
   private loadingController = inject(LoadingController);
   private toastController = inject(ToastController);
-  private modalFlowService = inject(AddNewFlowModalComponent);
-  private modalEntryService = inject(AddNewEntryModalComponent);
-
 
   public reverseKeyValue = (a: any, b: any) => {
     return b.key.localeCompare(a.key);

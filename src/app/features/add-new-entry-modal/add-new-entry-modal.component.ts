@@ -12,11 +12,11 @@ import {
   IonTextarea,
   IonTitle,
   IonToolbar,
+  ModalController,
   ToastController
 } from '@ionic/angular/standalone';
 import {FormsModule} from '@angular/forms';
 import {WorkEntryService} from '../../core/work-entry.service';
-import {IonicModule, ModalController} from '@ionic/angular';
 import {WorkEntry} from '../../models/work-entry.model';
 import {CommonModule} from '@angular/common';
 
@@ -26,7 +26,7 @@ import {CommonModule} from '@angular/common';
   styleUrls: ['./add-new-entry-modal.component.scss'],
   standalone: true,
   imports: [
-    IonicModule, CommonModule,
+    CommonModule,
     IonHeader,
     IonToolbar,
     IonTitle,
