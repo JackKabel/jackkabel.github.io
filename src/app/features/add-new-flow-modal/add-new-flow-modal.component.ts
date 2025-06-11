@@ -15,8 +15,10 @@ import {
   ToastController
 } from "@ionic/angular/standalone";
 import {WorkEntryService} from '../../core/work-entry.service';
-import {ModalController} from '@ionic/angular';
+import {IonicModule, ModalController} from '@ionic/angular';
 import {WorkFlow} from '../../models/work-flow.model';
+import {CommonModule} from '@angular/common';
+import {BrowserModule} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-add-new-flow-modal',
@@ -24,6 +26,7 @@ import {WorkFlow} from '../../models/work-flow.model';
   styleUrls: ['./add-new-flow-modal.component.scss'],
   standalone: true,
   imports: [
+    IonicModule, CommonModule, BrowserModule,
     FormsModule,
     IonButton,
     IonButtons,
