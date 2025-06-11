@@ -9,7 +9,7 @@ const FLOWS_STORAGE_KEY = 'work-flows';
 @Injectable({ providedIn: 'root' })
 export class WorkEntryService {
   private _storage: Storage | null = null;
-  private ready: Promise<void>;
+  private readonly ready: Promise<void>;
 
   constructor(private storage: Storage) {
     this.ready = this.init();
