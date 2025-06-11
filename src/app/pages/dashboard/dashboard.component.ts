@@ -41,6 +41,7 @@ import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-ne
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
+  providers: [AddNewEntryModalComponent, AddNewFlowModalComponent],
   imports: [
     IonContent,
     IonItem,
