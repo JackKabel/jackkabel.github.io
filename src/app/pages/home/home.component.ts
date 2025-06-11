@@ -2,6 +2,8 @@ import {Component} from '@angular/core';
 import {IonBadge, IonIcon, IonTabBar, IonTabButton, IonTabs} from '@ionic/angular/standalone';
 import {NgIf} from '@angular/common';
 import {StandaloneService} from '../../core/standalone.service';
+import {AddNewEntryModalComponent} from '../../features/add-new-entry-modal/add-new-entry-modal.component';
+import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-new-flow-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +15,9 @@ import {StandaloneService} from '../../core/standalone.service';
     IonTabButton,
     IonIcon,
     IonBadge,
-    NgIf
+    NgIf,
+    AddNewEntryModalComponent,
+    AddNewFlowModalComponent
   ]
 })
 export class HomeComponent {

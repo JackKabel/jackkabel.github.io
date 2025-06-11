@@ -73,8 +73,6 @@ import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-ne
     IonCardSubtitle,
     IonCardContent,
     IonPopover,
-    AddNewEntryModalComponent,
-    AddNewFlowModalComponent
   ]
 })
 export class DashboardComponent implements ViewWillEnter, AfterViewInit {
