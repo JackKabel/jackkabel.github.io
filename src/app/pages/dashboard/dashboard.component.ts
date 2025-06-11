@@ -41,7 +41,6 @@ import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-ne
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
-  providers: [AddNewEntryModalComponent, AddNewFlowModalComponent],
   imports: [
     IonContent,
     IonItem,
@@ -73,7 +72,9 @@ import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-ne
     IonCardTitle,
     IonCardSubtitle,
     IonCardContent,
-    IonPopover
+    IonPopover,
+    AddNewEntryModalComponent,
+    AddNewFlowModalComponent
   ]
 })
 export class DashboardComponent implements ViewWillEnter, AfterViewInit {
