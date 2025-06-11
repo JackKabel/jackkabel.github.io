@@ -3,7 +3,8 @@ import {Storage} from '@ionic/storage-angular';
 import {WorkEntry} from '../models/work-entry.model';
 import {WorkFlow} from '../models/work-flow.model';
 
-const STORAGE_KEY = 'work-entries';
+const ENTRIES_STORAGE_KEY = 'work-entries';
+const FLOWS_STORAGE_KEY = 'work-flows';
 
 @Injectable({ providedIn: 'root' })
 export class WorkEntryService {
@@ -20,43 +21,59 @@ export class WorkEntryService {
 
   async getEntries(): Promise<WorkEntry[]> {
     await this.ready;
-    return (await this._storage?.get(STORAGE_KEY)) || [];
-  }
-
-  async getEntriesByFlowId(flowId: string): Promise<WorkEntry[]> {
-    await this.ready;
-    const entries = await this.getEntries();
-    return entries.filter(entry => entry.flowId === flowId);
+    return (await this._storage?.get(ENTRIES_STORAGE_KEY)) || [];
   }
 
   async addEntry(entry: WorkEntry): Promise<void> {
     await this.ready;
     const entries = await this.getEntries();
     entries.push(entry);
-    await this._storage?.set(STORAGE_KEY, entries);
+    await this._storage?.set(ENTRIES_STORAGE_KEY, entries);
+  }
+
+  async updateEntry(entry: WorkEntry): Promise<void> {
+    await this.ready;
+    const entries = await this.getEntries();
+    const updatedEntries = entries.map(e => e.id === entry.id ? entry : e);
+    await this._storage?.set(ENTRIES_STORAGE_KEY, updatedEntries);
   }
 
   async deleteEntry(entryId: string): Promise<void> {
     await this.ready;
     const entries = await this.getEntries();
     const updatedEntries = entries.filter(entry => entry.id !== entryId);
-    await this._storage?.set(STORAGE_KEY, updatedEntries);
+    await this._storage?.set(ENTRIES_STORAGE_KEY, updatedEntries);
   }
 
   async getFlows(): Promise<WorkFlow[]> {
     await this.ready;
-    return (await this._storage?.get('work-flows')) || [];
+    return (await this._storage?.get(FLOWS_STORAGE_KEY)) || [];
   }
 
   async addFlow(flow: WorkFlow): Promise<void> {
     await this.ready;
     const flows = await this.getFlows();
     flows.push(flow);
-    await this._storage?.set('work-flows', flows);
+    await this._storage?.set(FLOWS_STORAGE_KEY, flows);
+  }
+
+  async updateFlow(flow: WorkFlow): Promise<void> {
+    await this.ready;
+    const flows = await this.getFlows();
+    const updatedFlows = flows.map(f => f.id === flow.id ? flow : f);
+    await this._storage?.set(FLOWS_STORAGE_KEY, updatedFlows);
+  }
+
+  async deleteFlow(flowId: string): Promise<void> {
+    await this.ready;
+    const flows = await this.getFlows();
+    const updatedFlows = flows.filter(flow => flow.id !== flowId);
+    await this._storage?.set(FLOWS_STORAGE_KEY, updatedFlows);
   }
 
   async clearAll(): Promise<void> {
     await this.ready;
-    await this._storage?.remove(STORAGE_KEY);
+    await this._storage?.remove(ENTRIES_STORAGE_KEY);
+    await this._storage?.remove(FLOWS_STORAGE_KEY);
   }
 }

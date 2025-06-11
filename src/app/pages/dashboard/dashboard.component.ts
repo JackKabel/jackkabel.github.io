@@ -1,40 +1,30 @@
-import {Component, computed, inject, signal} from '@angular/core';
+import {AfterViewInit, Component, computed, ElementRef, inject, signal, ViewChild} from '@angular/core';
 import {
   IonAccordion,
   IonAccordionGroup,
   IonBadge,
   IonButton,
-  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonDatetime,
-  IonFab,
-  IonFabButton,
-  IonFooter,
   IonHeader,
   IonIcon,
-  IonInput,
   IonItem,
   IonItemOption,
   IonItemOptions,
   IonItemSliding,
   IonLabel,
   IonList,
-  IonLoading,
-  IonModal,
+  IonLoading, IonPopover,
   IonRefresher,
   IonRefresherContent,
   IonSegment,
   IonSegmentButton,
   IonText,
-  IonTextarea,
-  IonTitle,
-  IonToast,
-  IonToolbar,
+  IonToolbar, ToastController,
   ViewWillEnter
 } from '@ionic/angular/standalone';
 import {DatePipe, KeyValuePipe, NgForOf, NgIf} from '@angular/common';
@@ -43,6 +33,8 @@ import {FormsModule} from '@angular/forms';
 import {WorkFlow} from '../../models/work-flow.model';
 import {WorkEntry} from '../../models/work-entry.model';
 import {LoadingController, ModalController, RefresherCustomEvent} from '@ionic/angular';
+import {AddNewEntryModalComponent} from '../../features/add-new-entry-modal/add-new-entry-modal.component';
+import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-new-flow-modal.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -63,182 +55,159 @@ import {LoadingController, ModalController, RefresherCustomEvent} from '@ionic/a
     IonAccordionGroup,
     IonHeader,
     IonToolbar,
-    IonTitle,
     IonRefresher,
     IonRefresherContent,
     IonButton,
     IonIcon,
-    IonModal,
-    IonDatetime,
-    IonInput,
     FormsModule,
-    IonFooter,
-    IonButtons,
     IonSegment,
     IonSegmentButton,
     IonBadge,
     IonItemSliding,
     IonItemOptions,
     IonItemOption,
-    IonFab,
-    IonFabButton,
-    IonTextarea,
-    IonToast,
     IonLoading,
     IonCard,
     IonCardHeader,
     IonCardTitle,
     IonCardSubtitle,
-    IonCardContent
+    IonCardContent,
+    IonPopover
   ]
 })
-export class DashboardComponent implements ViewWillEnter {
+export class DashboardComponent implements ViewWillEnter, AfterViewInit {
+  @ViewChild(IonContent) content!: IonContent;
 
   flows = signal<WorkFlow[]>([]);
   entries = signal<WorkEntry[]>([]);
-  selectedFlowId = signal<string>('-1');
+  selectedFlowId = signal<string>('Main');
   expandedMonth = signal<string | null>(null);
   isLoading = signal<boolean>(true);
-  showSuccessToast = signal<boolean>(false);
-  toastMessage = signal<string>('');
-  toastColor = signal<string>('success');
-  // Computed values
   activeFlow = computed(() =>
     this.flows().find(f => f.id === this.selectedFlowId())
   );
-  // Form data
-  newEntry: Partial<WorkEntry> = {
-    flowId: this.selectedFlowId(),
-    date: new Date().toISOString(),
-    hours: 8
-  };
-  newFlow: Partial<WorkFlow> = {};
-  maxDate = new Date().toISOString();
   monthlyEntries = computed(() => {
     const flow = this.activeFlow();
     if (!flow) return new Map();
-    const entries = flow.id
+    const filteredEntries = flow.id
       ? this.entries().filter(e => e.flowId === flow.id)
       : this.entries();
-
     const grouped = new Map<string, WorkEntry[]>();
-
-    entries.forEach(entry => {
-      const monthKey = entry.date.substring(0, 7); // YYYY-MM
+    filteredEntries.forEach(entry => {
+      const monthKey = entry.date.substring(0, 7); // Extracts 'YYYY-MM'
       if (!grouped.has(monthKey)) {
         grouped.set(monthKey, []);
       }
       grouped.get(monthKey)!.push(entry);
     });
+    grouped.forEach(entriesArray => {
+      entriesArray.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    });
+
     return grouped;
   });
-  scrollY = 0;
-  isModalOpen = false;
-  // Inject services
+  @ViewChild('sentinel', { static: true }) sentinel!: ElementRef;
+  @ViewChild('flowCard', { static: true }) flowCard!: ElementRef;
+  isStuck = false;
+
   private workService = inject(WorkEntryService);
   private modalController = inject(ModalController);
   private loadingController = inject(LoadingController);
+  private toastController = inject(ToastController);
 
-  get hideHeader() {
-    return this.scrollY > 150; // toggle content visibility
-  }
 
-  onScroll(event: CustomEvent) {
-    this.scrollY = event.detail.scrollTop;
-  }
+  public reverseKeyValue = (a: any, b: any) => {
+    return b.key.localeCompare(a.key);
+  };
 
   async ionViewWillEnter() {
     await this.initializeData();
   }
 
+  ngAfterViewInit(): void {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        this.isStuck = !entry.isIntersecting;
+      },
+      {
+        root: null,
+        threshold: [0]
+      }
+    );
+    observer.observe(this.sentinel.nativeElement);
+  }
+
   onFlowChange(event: any) {
     this.selectedFlowId.set(event.detail.value);
     this.expandedMonth.set(null);
-    this.resetEntryForm();
-  }
-
-  async saveEntry() {
-    if (!this.isFormValid()) return;
-
-    try {
-      this.expandedMonth.set(null);
-      const entryData = {
-        id: Date.now().toString(),
-        flowId: this.newEntry.flowId!,
-        date: this.newEntry.date!.split('T')[0], // Convert to YYYY-MM-DD
-        hours: Number(this.newEntry.hours!),
-        note: this.newEntry.note?.trim() || undefined
-      };
-
-      await this.workService.addEntry(entryData);
-      this.showToast('Entry saved successfully');
-      this.resetEntryForm();
-      await this.dismissModal('add-entry');
-
-    } catch (error) {
-      console.error('Error saving entry:', error);
-      this.showToast('Error saving entry', 'danger');
-    } finally {
-      await this.initializeData();
-    }
   }
 
   async editEntry(entry: WorkEntry) {
-    // Pre-fill form with entry data
-    this.newEntry = {
-      flowId: entry.flowId,
-      date: entry.date,
-      hours: entry.hours,
-      note: entry.note
-    };
-
-    // Delete old entry (we'll create a new one)
-    await this.deleteEntry(entry, false);
-
-    // Open modal for editing
     const modal = await this.modalController.create({
-      component: 'add-entry', // This would reference your modal
-      initialBreakpoint: 0.75,
-      breakpoints: [0, 0.75, 1]
+      component: AddNewEntryModalComponent,
+      componentProps: {flowId: this.selectedFlowId(), oldEntry: entry},
+      breakpoints: [0, .5, 1],
+      initialBreakpoint: 1
     });
-
     await modal.present();
+
+    modal.onWillDismiss().then((result) => {
+      if (result.role === 'saved') {
+        this.handleRefresh().then(() => {
+          const current = this.expandedMonth();
+          this.expandedMonth.set(null);
+          setTimeout(() => this.expandedMonth.set(current), 0);
+        });
+      }
+    })
   }
 
-  // === ENTRY MANAGEMENT ===
-
-  async deleteEntry(entry: WorkEntry, showToast = true) {
+  async deleteEntry(entry: WorkEntry, notification: boolean) {
     try {
       await this.workService.deleteEntry(entry.id);
-      if (showToast) {
-        this.showToast('Entry deleted');
+      if (notification) {
+        void this.presentToast('Entry deleted successfully', 'success');
+        void this.handleRefresh().then(() => {
+          const current = this.expandedMonth();
+          this.expandedMonth.set(null);
+          setTimeout(() => this.expandedMonth.set(current), 0);
+        });
       }
     } catch (error) {
-      console.error('Error deleting entry:', error);
-      this.showToast('Error deleting entry', 'danger');
+      void this.presentToast('Error deleting entry', 'danger');
     }
   }
 
-  async saveFlow() {
-    if (!this.isFlowFormValid()) return;
+  async editFlow() {
+    let flow = this.activeFlow();
+    const modal = await this.modalController.create({
+      component: AddNewFlowModalComponent,
+      componentProps: {oldFlow: flow},
+      breakpoints: [0, .5, 1],
+      initialBreakpoint: 1
+    });
+    await modal.present();
 
+    modal.onWillDismiss().then((result) => {
+      if (result.role === 'saved') {
+        this.handleRefresh()
+      }
+    })
+  }
+
+  async deleteFlow(notification: boolean) {
     try {
-      const flowData = {
-        id: this.newFlow.name!.trim(),
-        name: this.newFlow.name!.trim(),
-        description: this.newFlow.description?.trim(),
-      };
-
-      await this.workService.addFlow(flowData);
-      this.showToast(`Flow "${flowData.name}" created successfully`);
-      await this.dismissModal('add-flow-trigger');
+      await this.workService.deleteFlow(this.activeFlow()!.id);
+      if (notification) {
+        void this.presentToast('Flow deleted successfully', 'success');
+      }
     } catch (error) {
-      console.error('Error saving flow:', error);
-      this.showToast('Error creating flow', 'danger');
+      void this.presentToast('Error deleting flow', 'danger');
+    } finally {
+      void this.handleRefresh();
+      this.selectedFlowId.set('Main');
     }
   }
-
-  // === UTILITY METHODS ===
 
   getTotalHoursForMonth(entries: WorkEntry[]): number {
     return entries.reduce((sum, entry) => sum + entry.hours, 0);
@@ -254,55 +223,62 @@ export class DashboardComponent implements ViewWillEnter {
     return entry.id;
   }
 
-  isFormValid(): boolean {
-    return !!(
-      this.newEntry.flowId &&
-      this.newEntry.date &&
-      this.newEntry.hours &&
-      this.newEntry.hours > 0
-    );
+  async presentEntryModal() {
+    const modal = await this.modalController.create({
+      component: AddNewEntryModalComponent,
+      componentProps: {flowId: this.selectedFlowId()},
+      breakpoints: [0, .5, 1],
+      initialBreakpoint: 1
+    });
+    await modal.present();
+
+    modal.onWillDismiss().then((result) => {
+      if (result.role === 'saved') {
+        this.handleRefresh()
+      }
+    })
   }
 
-  isFlowFormValid(): boolean {
-    return true;
+  async presentFlowModal() {
+    const modal = await this.modalController.create({
+      component: AddNewFlowModalComponent,
+      breakpoints: [0, .5, 1],
+      initialBreakpoint: 1
+    });
+    await modal.present();
+
+    modal.onWillDismiss().then((result) => {
+      if (result.role === 'saved') {
+        this.handleRefresh()
+      }
+    })
   }
 
-  resetEntryForm() {
-    this.newEntry = {
-      flowId: this.selectedFlowId(),
-      date: new Date().toISOString(),
-      hours: 8
-    };
+  async presentToast(message: string, color?: string, icon?: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      color: color ? color : undefined,
+      icon: icon ? icon : undefined,
+      duration: 1500,
+      position: 'bottom',
+    });
+
+    await toast.present();
   }
 
-  // === FORM RESET ===
-
-  presentModal(modal: IonModal) {
-    this.isModalOpen = true;
-  }
-
-  async dismissModal(trigger: string) {
-    const modal = await this.modalController.getTop();
-    if (modal) {
-      await modal.dismiss();
-    }
-  }
-
-  async handleRefresh(event: RefresherCustomEvent) {
+  async handleRefresh(event?: RefresherCustomEvent) {
     try {
       await this.initializeData();
     } catch (error) {
       console.error('Error refreshing:', error);
     } finally {
-      await event.target.complete();
+      await event?.target.complete();
     }
   }
 
-  // === MODAL MANAGEMENT ===
-
   private async initializeData() {
+    this.isLoading.set(true);
     const loading = await this.loadingController.create({
-      message: 'Loading flows...',
       spinner: 'crescent'
     });
     await loading.present();
@@ -312,21 +288,25 @@ export class DashboardComponent implements ViewWillEnter {
         this.workService.getFlows(),
         this.workService.getEntries()
       ]);
-
-      this.flows.set(flows);
+      if (flows.length === 0) {
+        await this.workService.addFlow({
+          id: 'Main',
+          name: 'Main',
+          description: 'Default flow'
+        });
+        const updatedFlows = await this.workService.getFlows();
+        this.flows.set(updatedFlows);
+      } else {
+        this.flows.set(flows);
+      }
+      entries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
       this.entries.set(entries);
+
     } catch (error) {
       console.error('Error initializing data:', error);
-      this.showToast('Error loading data', 'danger');
     } finally {
       await loading.dismiss();
       this.isLoading.set(false);
     }
-  }
-
-  private showToast(message: string, color: string = 'success') {
-    this.toastMessage.set(message);
-    this.toastColor.set(color);
-    this.showSuccessToast.set(true);
   }
 }

@@ -23,7 +23,8 @@ import {
   downloadOutline,
   documentTextOutline,
   createOutline,
-  trashBinOutline
+  trashBinOutline,
+  ellipsisVerticalOutline
 } from 'ionicons/icons';
 
 export function registerIcons() {
@@ -51,6 +52,7 @@ export function registerIcons() {
     downloadOutline,
     documentTextOutline,
     createOutline,
-    trashBinOutline
+    trashBinOutline,
+    ellipsisVerticalOutline
   });
 }
