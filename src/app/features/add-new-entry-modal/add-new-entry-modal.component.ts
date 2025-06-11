@@ -19,7 +19,6 @@ import {WorkEntryService} from '../../core/work-entry.service';
 import {IonicModule, ModalController} from '@ionic/angular';
 import {WorkEntry} from '../../models/work-entry.model';
 import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-add-new-entry-modal',
@@ -27,7 +26,7 @@ import {BrowserModule} from '@angular/platform-browser';
   styleUrls: ['./add-new-entry-modal.component.scss'],
   standalone: true,
   imports: [
-    IonicModule, CommonModule, BrowserModule,
+    IonicModule, CommonModule,
     IonHeader,
     IonToolbar,
     IonTitle,

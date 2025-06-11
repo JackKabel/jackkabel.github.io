@@ -18,21 +18,23 @@ import {
   IonItemSliding,
   IonLabel,
   IonList,
-  IonLoading, IonPopover,
+  IonLoading,
+  IonPopover,
   IonRefresher,
   IonRefresherContent,
   IonSegment,
   IonSegmentButton,
   IonText,
-  IonToolbar, ToastController,
+  IonToolbar,
+  ToastController,
   ViewWillEnter
 } from '@ionic/angular/standalone';
-import {DatePipe, KeyValuePipe, NgForOf, NgIf} from '@angular/common';
+import {CommonModule, DatePipe, KeyValuePipe, NgForOf, NgIf} from '@angular/common';
 import {WorkEntryService} from '../../core/work-entry.service';
 import {FormsModule} from '@angular/forms';
 import {WorkFlow} from '../../models/work-flow.model';
 import {WorkEntry} from '../../models/work-entry.model';
-import {LoadingController, ModalController, RefresherCustomEvent} from '@ionic/angular';
+import {IonicModule, LoadingController, ModalController, RefresherCustomEvent} from '@ionic/angular';
 import {AddNewEntryModalComponent} from '../../features/add-new-entry-modal/add-new-entry-modal.component';
 import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-new-flow-modal.component';
 
@@ -42,6 +44,7 @@ import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-ne
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
   imports: [
+    IonicModule, CommonModule,
     IonContent,
     IonItem,
     IonList,
@@ -73,8 +76,6 @@ import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-ne
     IonCardSubtitle,
     IonCardContent,
     IonPopover,
-    AddNewEntryModalComponent,
-    AddNewFlowModalComponent
   ]
 })
 export class DashboardComponent implements ViewWillEnter, AfterViewInit {
@@ -109,8 +110,8 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
 
     return grouped;
   });
-  @ViewChild('sentinel', { static: true }) sentinel!: ElementRef;
-  @ViewChild('flowCard', { static: true }) flowCard!: ElementRef;
+  @ViewChild('sentinel', {static: true}) sentinel!: ElementRef;
+  @ViewChild('flowCard', {static: true}) flowCard!: ElementRef;
   isStuck = false;
 
   private workService = inject(WorkEntryService);

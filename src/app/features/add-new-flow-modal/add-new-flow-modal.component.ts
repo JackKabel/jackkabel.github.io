@@ -18,7 +18,6 @@ import {WorkEntryService} from '../../core/work-entry.service';
 import {IonicModule, ModalController} from '@ionic/angular';
 import {WorkFlow} from '../../models/work-flow.model';
 import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-add-new-flow-modal',
@@ -26,7 +25,7 @@ import {BrowserModule} from '@angular/platform-browser';
   styleUrls: ['./add-new-flow-modal.component.scss'],
   standalone: true,
   imports: [
-    IonicModule, CommonModule, BrowserModule,
+    IonicModule, CommonModule,
     FormsModule,
     IonButton,
     IonButtons,
