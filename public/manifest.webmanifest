@@ -4,7 +4,7 @@
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "icons": [
     {
       "src": "icons/web-app-manifest-192x192.png",
