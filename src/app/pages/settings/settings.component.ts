@@ -16,9 +16,9 @@ import {
   IonToast
 } from '@ionic/angular/standalone';
 import {WorkEntryService} from '../../core/work-entry.service';
-import {HomeComponent} from '../home/home.component';
 import {StandaloneService} from '../../core/standalone.service';
 import {NgIf} from '@angular/common';
+import {AnalyticService} from '../../core/analytic.service';
 
 @Component({
   selector: 'app-settings',
@@ -49,9 +49,10 @@ export class SettingsComponent implements OnInit {
   isStandalone = false;
 
   constructor(private workEntryService: WorkEntryService,
-              protected standaloneService: StandaloneService) {
-  this.isStandalone = this.standaloneService.isStandalone;
-}
+              protected standaloneService: StandaloneService,
+              private analytics: AnalyticService) {
+    this.isStandalone = this.standaloneService.isStandalone;
+  }
 
   ngOnInit() {
     window.addEventListener('beforeinstallprompt', (event: any) => {
@@ -61,6 +62,8 @@ export class SettingsComponent implements OnInit {
   }
 
   clearData() {
+    this.analytics.event('clear_data', 'data_interaction', 'Cleared all data');
+
     this.workEntryService.clearAll().then(() => this.setOpen(true));
   }
 

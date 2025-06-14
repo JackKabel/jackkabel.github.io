@@ -39,6 +39,7 @@ import {WorkFlow} from '../../models/work-flow.model';
 import {WorkEntry} from '../../models/work-entry.model';
 import {AddNewEntryModalComponent} from '../../features/add-new-entry-modal/add-new-entry-modal.component';
 import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-new-flow-modal.component';
+import {AnalyticService} from '../../core/analytic.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -118,6 +119,7 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
   private modalController = inject(ModalController);
   private loadingController = inject(LoadingController);
   private toastController = inject(ToastController);
+  private analytics = inject(AnalyticService);
 
   public reverseKeyValue = (a: any, b: any) => {
     return b.key.localeCompare(a.key);
@@ -146,6 +148,8 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
   }
 
   async editEntry(entry: WorkEntry) {
+    this.analytics.event('edit_entry', 'entry_interaction', 'Pressed Edit Entry Button');
+
     const modal = await this.modalController.create({
       component: AddNewEntryModalComponent,
       componentProps: {flowId: this.selectedFlowId(), oldEntry: entry},
@@ -166,6 +170,7 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
   }
 
   async deleteEntry(entry: WorkEntry, notification: boolean) {
+    this.analytics.event('delete_entry', 'entry_interaction', 'Pressed Delete Entry Button');
     try {
       await this.workService.deleteEntry(entry.id);
       if (notification) {
@@ -182,6 +187,8 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
   }
 
   async editFlow() {
+    this.analytics.event('edit_flow', 'flow_interaction', 'Pressed Edit Flow Button');
+
     let flow = this.activeFlow();
     const modal = await this.modalController.create({
       component: AddNewFlowModalComponent,
@@ -199,6 +206,8 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
   }
 
   async deleteFlow(notification: boolean) {
+    this.analytics.event('delete_flow', 'flow_interaction', 'Pressed Delete Flow Button');
+
     try {
       await this.workService.deleteFlow(this.activeFlow()!.id);
       if (notification) {
@@ -227,6 +236,8 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
   }
 
   async presentEntryModal() {
+    this.analytics.event('add_entry', 'entry_interaction', 'Pressed Add Entry Button');
+
     const modal = await this.modalController.create({
       component: AddNewEntryModalComponent,
       componentProps: {flowId: this.selectedFlowId()},
@@ -243,6 +254,8 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
   }
 
   async presentFlowModal() {
+    this.analytics.event('add_flow', 'flow_interaction', 'Pressed Add Flow Button');
+
     const modal = await this.modalController.create({
       component: AddNewFlowModalComponent,
       breakpoints: [0, .5, 1],
