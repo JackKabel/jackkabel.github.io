@@ -8,7 +8,7 @@
         <ion-label>{{ flow.name }}</ion-label>
       </ion-segment-button>
     </ion-segment>
-    <ion-button (click)="presentFlowModal()" class="add-flow-btn" fill="clear" size="small">
+    <ion-button (click)="presentFlowModal()" fill="clear" size="small">
       <ion-icon name="add-outline" slot="icon-only"></ion-icon>
     </ion-button>
   </ion-toolbar>
@@ -18,8 +18,9 @@
   <ion-refresher (ionRefresh)="handleRefresh($event)" slot="fixed">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
+  <div class="layout">
   <ion-card class="flow-card">
-    <ion-button id="context-menu-trigger" class="more" fill="clear" size="small">
+    <ion-button class="more" fill="clear" id="context-menu-trigger" size="small">
       <ion-icon name="ellipsis-vertical-outline" slot="icon-only"></ion-icon>
     </ion-button>
     <ion-card-header>
@@ -32,7 +33,7 @@
     </ion-card-header>
     <ion-card-content>
       <div class="chart">
-        <ion-segment value="7" color="primary" (ionChange)="onSegmentChange($event)">
+        <ion-segment (ionChange)="onSegmentChange($event)" color="primary" value="7">
           <ion-segment-button value="7">
             <ion-label>Week</ion-label>
           </ion-segment-button>
@@ -50,8 +51,8 @@
       </ion-button>
     </ion-card-content>
   </ion-card>
-  <div *ngIf="activeFlow()">
-    <ion-accordion-group [value]="expandedMonth()" (ionChange)="expandedMonth.set($event.detail.value)">
+  <div *ngIf="activeFlow()" class="accordions">
+    <ion-accordion-group (ionChange)="expandedMonth.set($event.detail.value)" [value]="expandedMonth()">
       <ion-accordion *ngFor="let month of monthlyEntries() | keyvalue: reverseKeyValue" [value]="month.key">
         <ion-item color="light" slot="header">
           <ion-icon name="calendar-outline" slot="start"></ion-icon>
@@ -63,43 +64,40 @@
             {{ getTotalHoursForMonth(month.value) }}h
           </ion-badge>
         </ion-item>
-
-        <div class="month-content" slot="content">
-          <ion-list>
-            <ion-item-sliding *ngFor="let entry of month.value; trackBy: trackByEntry" #slideOptions>
-              <ion-item>
-                <div class="entry-content">
-                  <div class="entry-header">
-                    <h3 class="entry-date">
-                      <ion-text [color]="isWeekend(entry.date) ? 'danger' : 'dark'">
-                        {{ entry.date | date:'MMM d' }}
-                      </ion-text>
-                      <ion-text class="day-name" color="medium">
-                        {{ entry.date | date:'EEE' }}
-                      </ion-text>
-                    </h3>
-                    <div class="entry-hours">
-                      <ion-text>{{ entry.hours }}h</ion-text>
-                      <ion-button fill="clear" size="normal" id="trigger-options" (click)="slideOptions.open('end')">
-                        <ion-icon name="ellipsis-vertical-outline" slot="icon-only"></ion-icon>
-                      </ion-button>
-                    </div>
+        <ion-list slot="content">
+          <ion-item-sliding #slideOptions *ngFor="let entry of month.value; trackBy: trackByEntry">
+            <ion-item>
+              <div class="entry-content">
+                <div class="entry-header">
+                  <h3 class="entry-date">
+                    <ion-text [color]="isWeekend(entry.date) ? 'danger' : 'dark'">
+                      {{ entry.date | date:'MMM d' }}
+                    </ion-text>
+                    <ion-text class="day-name" color="medium">
+                      {{ entry.date | date:'EEE' }}
+                    </ion-text>
+                  </h3>
+                  <div class="entry-hours">
+                    <ion-text>{{ entry.hours }}h</ion-text>
+                    <ion-button (click)="slideOptions.open('end')" fill="clear" id="trigger-options" size="normal">
+                      <ion-icon name="ellipsis-vertical-outline" slot="icon-only"></ion-icon>
+                    </ion-button>
                   </div>
-                  <p *ngIf="entry.note" class="entry-note">{{ entry.note }}</p>
                 </div>
-              </ion-item>
+                <p *ngIf="entry.note" class="entry-note">{{ entry.note }}</p>
+              </div>
+            </ion-item>
 
-              <ion-item-options side="end">
-                <ion-item-option (click)="editEntry(entry)" color="primary">
-                  <ion-icon name="create-outline" slot="icon-only"></ion-icon>
-                </ion-item-option>
-                <ion-item-option (click)="deleteEntry(entry, true)" color="danger">
-                  <ion-icon name="trash-bin-outline" slot="icon-only"></ion-icon>
-                </ion-item-option>
-              </ion-item-options>
-            </ion-item-sliding>
-          </ion-list>
-        </div>
+            <ion-item-options side="end">
+              <ion-item-option (click)="editEntry(entry)" color="primary">
+                <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+              </ion-item-option>
+              <ion-item-option (click)="deleteEntry(entry, true)" color="danger">
+                <ion-icon name="trash-bin-outline" slot="icon-only"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-list>
       </ion-accordion>
     </ion-accordion-group>
   </div>
@@ -108,16 +106,17 @@
     <h3>No entries yet</h3>
     <p>Start tracking your work hours for {{ activeFlow()?.name || 'this flow' }}</p>
   </div>
+  </div>
   <ion-loading [isOpen]="isLoading()" spinner="crescent"></ion-loading>
   <ion-popover #popover trigger="context-menu-trigger" triggerAction="click">
     <ng-template>
       <ion-list>
         <ion-item (click)="editFlow(); popover?.dismiss()">
-          <ion-icon name="create-outline" slot="start" color="primary"></ion-icon>
+          <ion-icon color="primary" name="create-outline" slot="start"></ion-icon>
           <ion-label>Edit</ion-label>
         </ion-item>
         <ion-item (click)="deleteFlow(true); popover?.dismiss()">
-          <ion-icon name="trash-bin-outline" slot="start" color="danger"></ion-icon>
+          <ion-icon color="danger" name="trash-bin-outline" slot="start"></ion-icon>
           <ion-label color="danger">Delete</ion-label>
         </ion-item>
       </ion-list>

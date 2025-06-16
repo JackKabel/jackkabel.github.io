@@ -22,16 +22,6 @@
       margin-left: 8px;
     }
   }
-
-  .add-flow-btn {
-    --background: var(--ion-color-light-shade);
-    --color: var(--ion-color-medium);
-    --border-radius: 50%;
-    --padding-start: 8px;
-    --padding-end: 8px;
-    min-width: 40px;
-    height: 40px;
-  }
 }
 
 ion-accordion {
@@ -39,10 +29,6 @@ ion-accordion {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.month-content {
-  background: var(--ion-color-light-tint);
 }
 
 .entry-content {
@@ -132,3 +118,18 @@ ion-accordion {
   display: grid;
   grid-template-rows: auto 1fr;
 }
+
+@media (min-width: 1024px) {
+  .layout {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
+
+    .empty-state {
+      grid-row: 1/2;
+      grid-column: 2/3;
+    }
+  }
+}
+
