@@ -40,6 +40,7 @@ import {WorkEntry} from '../../models/work-entry.model';
 import {AddNewEntryModalComponent} from '../../features/add-new-entry-modal/add-new-entry-modal.component';
 import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-new-flow-modal.component';
 import {AnalyticService} from '../../core/analytic.service';
+import {ChartComponent} from '../../shared/chart/chart.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -79,9 +80,10 @@ import {AnalyticService} from '../../core/analytic.service';
     IonCardSubtitle,
     IonCardContent,
     IonPopover,
+    ChartComponent,
   ]
 })
-export class DashboardComponent implements ViewWillEnter, AfterViewInit {
+export class DashboardComponent implements ViewWillEnter {
   @ViewChild(IonContent) content!: IonContent;
   flows = signal<WorkFlow[]>([]);
   entries = signal<WorkEntry[]>([]);
@@ -91,6 +93,10 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
   activeFlow = computed(() =>
     this.flows().find(f => f.id === this.selectedFlowId())
   );
+  chartData = computed(() => {
+    return this.entries().filter(e => e.flowId === this.selectedFlowId());
+  })
+  chartResolution = signal<any>(7);
   monthlyEntries = computed(() => {
     const flow = this.activeFlow();
     if (!flow) return new Map();
@@ -111,9 +117,6 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
 
     return grouped;
   });
-  @ViewChild('sentinel', {static: true}) sentinel!: ElementRef;
-  @ViewChild('flowCard', {static: true}) flowCard!: ElementRef;
-  isStuck = false;
 
   private workService = inject(WorkEntryService);
   private modalController = inject(ModalController);
@@ -127,19 +130,6 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
 
   async ionViewWillEnter() {
     await this.initializeData();
-  }
-
-  ngAfterViewInit(): void {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        this.isStuck = !entry.isIntersecting;
-      },
-      {
-        root: null,
-        threshold: [0]
-      }
-    );
-    observer.observe(this.sentinel.nativeElement);
   }
 
   onFlowChange(event: any) {
@@ -268,6 +258,10 @@ export class DashboardComponent implements ViewWillEnter, AfterViewInit {
         this.handleRefresh()
       }
     })
+  }
+
+  onSegmentChange(event: any) {
+    this.chartResolution.set(Number(event.detail.value));
   }
 
   async presentToast(message: string, color?: string, icon?: string) {
