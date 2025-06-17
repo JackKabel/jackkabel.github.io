@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {IonBadge, IonContent, IonIcon, IonText} from '@ionic/angular/standalone';
 import {FormsModule} from '@angular/forms';
+import {themeColor} from '../../models/theme-color.model';
 
 
 @Component({
@@ -17,5 +18,6 @@ import {FormsModule} from '@angular/forms';
 })
 export class AboutComponent {
 
+  protected readonly themeColor = themeColor;
 }
 

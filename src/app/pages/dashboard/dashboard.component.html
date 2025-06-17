@@ -8,7 +8,7 @@
         <ion-label>{{ flow.name }}</ion-label>
       </ion-segment-button>
     </ion-segment>
-    <ion-button (click)="presentFlowModal()" fill="clear" size="small">
+    <ion-button (click)="presentFlowModal()" [color]="themeColor()" fill="clear" size="small">
       <ion-icon name="add-outline" slot="icon-only"></ion-icon>
     </ion-button>
   </ion-toolbar>
@@ -19,12 +19,12 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <div class="layout">
-  <ion-card class="flow-card">
-    <ion-button class="more" fill="clear" id="context-menu-trigger" size="small">
+  <ion-card class="flow-card" >
+    <ion-button [color]="themeColor()" class="more" fill="clear" id="context-menu-trigger" size="small">
       <ion-icon name="ellipsis-vertical-outline" slot="icon-only"></ion-icon>
     </ion-button>
     <ion-card-header>
-      <ion-card-title>
+      <ion-card-title [color]="themeColor()">
         {{ activeFlow()?.name }}
       </ion-card-title>
       <ion-card-subtitle>
@@ -33,7 +33,7 @@
     </ion-card-header>
     <ion-card-content>
       <div class="chart">
-        <ion-segment (ionChange)="onSegmentChange($event)" color="primary" value="7">
+        <ion-segment (ionChange)="onSegmentChange($event)" [color]="themeColor()" value="7">
           <ion-segment-button value="7">
             <ion-label>Week</ion-label>
           </ion-segment-button>
@@ -46,7 +46,7 @@
         </ion-segment>
         <app-chart [entries]="chartData" [resolution]="chartResolution"></app-chart>
       </div>
-      <ion-button (click)="presentEntryModal()" [expand]="'block'">
+      <ion-button [color]="themeColor()" (click)="presentEntryModal()" [expand]="'block'">
         <span>Add Entry</span>
       </ion-button>
     </ion-card-content>
@@ -60,7 +60,7 @@
             <h2>{{ month.key | date:'MMMM yyyy' }}</h2>
             <p>{{ month.value.length }} entries • {{ getTotalHoursForMonth(month.value) }} hours</p>
           </ion-label>
-          <ion-badge slot="end">
+          <ion-badge slot="end" [color]="themeColor()">
             {{ getTotalHoursForMonth(month.value) }}h
           </ion-badge>
         </ion-item>
@@ -79,7 +79,7 @@
                   </h3>
                   <div class="entry-hours">
                     <ion-text>{{ entry.hours }}h</ion-text>
-                    <ion-button (click)="slideOptions.open('end')" fill="clear" id="trigger-options" size="normal">
+                    <ion-button [color]="themeColor()" (click)="slideOptions.open('end')" fill="clear" id="trigger-options" size="normal">
                       <ion-icon name="ellipsis-vertical-outline" slot="icon-only"></ion-icon>
                     </ion-button>
                   </div>
@@ -89,7 +89,7 @@
             </ion-item>
 
             <ion-item-options side="end">
-              <ion-item-option (click)="editEntry(entry)" color="primary">
+              <ion-item-option (click)="editEntry(entry)" [color]="themeColor()">
                 <ion-icon name="create-outline" slot="icon-only"></ion-icon>
               </ion-item-option>
               <ion-item-option (click)="deleteEntry(entry, true)" color="danger">
@@ -112,7 +112,7 @@
     <ng-template>
       <ion-list>
         <ion-item (click)="editFlow(); popover?.dismiss()">
-          <ion-icon color="primary" name="create-outline" slot="start"></ion-icon>
+          <ion-icon [color]="themeColor()" name="create-outline" slot="start"></ion-icon>
           <ion-label>Edit</ion-label>
         </ion-item>
         <ion-item (click)="deleteFlow(true); popover?.dismiss()">

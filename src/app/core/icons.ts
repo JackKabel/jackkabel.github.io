@@ -2,7 +2,9 @@ import {addIcons} from 'ionicons';
 import {
   addOutline,
   homeOutline,
+  home,
   statsChartOutline,
+  statsChart,
   timeOutline,
   checkmarkDoneOutline,
   calendarOutline,
@@ -10,7 +12,9 @@ import {
   cloudOfflineOutline,
   informationCircleOutline,
   checkmarkCircleOutline,
+  checkmarkCircle,
   settingsOutline,
+  settings,
   trashOutline,
   alertCircleOutline,
   shareOutline,
@@ -24,14 +28,17 @@ import {
   documentTextOutline,
   createOutline,
   trashBinOutline,
-  ellipsisVerticalOutline
+  ellipsisVerticalOutline,
+  arrowDown
 } from 'ionicons/icons';
 
 export function registerIcons() {
   addIcons({
     addOutline,
     homeOutline,
+    home,
     statsChartOutline,
+    statsChart,
     timeOutline,
     checkmarkDoneOutline,
     calendarOutline,
@@ -39,7 +46,9 @@ export function registerIcons() {
     cloudOfflineOutline,
     informationCircleOutline,
     checkmarkCircleOutline,
+    checkmarkCircle,
     settingsOutline,
+    settings,
     trashOutline,
     alertCircleOutline,
     shareOutline,
@@ -53,6 +62,7 @@ export function registerIcons() {
     documentTextOutline,
     createOutline,
     trashBinOutline,
-    ellipsisVerticalOutline
+    ellipsisVerticalOutline,
+    arrowDown
   });
 }

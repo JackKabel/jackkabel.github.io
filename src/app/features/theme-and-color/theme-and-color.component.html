@@ -1,0 +1,31 @@
+<!-- Theme Selector -->
+<div class="theme-options">
+  <div class="color-options">
+    <div
+      *ngFor="let option of IonicColorOptions"
+      (click)="selectColor(option.value)"
+      class="color-option"
+      [class.selected]="selectedColor === option.value"
+    >
+      <div class="color-swatch" [style.background-color]="'var(--ion-color-' + option.value + ')'"></div>
+      <ion-icon *ngIf="selectedColor === option.value" name="checkmark-circle" class="checkmark-icon-color"></ion-icon>
+    </div>
+  </div>
+  <div
+    *ngFor="let option of IonicTheme | keyvalue"
+    (click)="selectTheme(option.value)"
+    class="theme-option"
+    [class.selected]="selectedTheme === option.value"
+  >
+    <div
+      class="theme-preview"
+      [class.light]="option.value === 'light'"
+      [class.dark]="option.value === 'dark'"
+      [class.system]="option.value === 'system'">
+    </div>
+    <ion-text [color]="selectedTheme === option.value ? themeColor() : 'medium'">
+      {{ option.key }}
+    </ion-text>
+    <ion-icon *ngIf="selectedTheme === option.value" [color]="themeColor()" name="checkmark-circle" class="checkmark-icon-theme"></ion-icon>
+  </div>
+</div>

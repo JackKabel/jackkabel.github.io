@@ -1,10 +1,4 @@
-.badge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 1rem;
-  padding: .5rem;
-  border-radius: 50%;
-  height: 2rem;
-  aspect-ratio: 1/1;
+ion-badge {
+  --padding-end: .5rem;
+  --padding-start: .5rem;
 }

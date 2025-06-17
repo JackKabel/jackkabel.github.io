@@ -4,6 +4,7 @@ import {NgIf} from '@angular/common';
 import {StandaloneService} from '../../core/standalone.service';
 import {AddNewEntryModalComponent} from '../../features/add-new-entry-modal/add-new-entry-modal.component';
 import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-new-flow-modal.component';
+import {themeColor} from "../../models/theme-color.model";
 
 @Component({
   selector: 'app-home',
@@ -25,4 +26,6 @@ export class HomeComponent {
   constructor(protected standaloneService: StandaloneService) {
     this.isStandalone = this.standaloneService.isStandalone;
   }
+
+    protected readonly themeColor = themeColor;
 }

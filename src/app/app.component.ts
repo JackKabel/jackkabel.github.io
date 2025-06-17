@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {IonApp, IonRouterOutlet} from '@ionic/angular/standalone';
+import {ThemeColorService} from './core/theme-color.service';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +10,7 @@ import {IonApp, IonRouterOutlet} from '@ionic/angular/standalone';
 })
 export class AppComponent {
   title = 'WorkR';
+  constructor(private themeService: ThemeColorService) {
+    this.themeService.applyStoredTheme();
+  }
 }

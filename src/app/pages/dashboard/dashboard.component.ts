@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, computed, ElementRef, inject, signal, ViewChild} from '@angular/core';
+import {Component, computed, inject, signal, ViewChild} from '@angular/core';
 import {
   IonAccordion,
   IonAccordionGroup,
@@ -41,6 +41,7 @@ import {AddNewEntryModalComponent} from '../../features/add-new-entry-modal/add-
 import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-new-flow-modal.component';
 import {AnalyticService} from '../../core/analytic.service';
 import {ChartComponent} from '../../shared/chart/chart.component';
+import {themeColor} from '../../models/theme-color.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -96,6 +97,7 @@ export class DashboardComponent implements ViewWillEnter {
   chartData = computed(() => {
     return this.entries().filter(e => e.flowId === this.selectedFlowId());
   })
+  themeColor = themeColor;
   chartResolution = signal<any>(7);
   monthlyEntries = computed(() => {
     const flow = this.activeFlow();

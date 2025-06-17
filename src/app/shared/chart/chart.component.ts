@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, computed, effect, ElementRef, Input, Signal, signal, ViewChild,} from '@angular/core';
 import {Chart, registerables} from 'chart.js';
 import {WorkEntry} from '../../models/work-entry.model';
+import {themeColor} from '../../models/theme-color.model';
 
 @Component({
   selector: 'app-chart',
@@ -20,7 +21,7 @@ export class ChartComponent implements AfterViewInit {
     const entriesMap = new Map<string, number>();
     entries.forEach(entry => {
       const date = new Date(entry.date);
-      const dateKey = date.toISOString().split('T')[0];
+      const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
       const current = entriesMap.get(dateKey) || 0;
       entriesMap.set(dateKey, current + entry.hours);
     });
@@ -28,7 +29,7 @@ export class ChartComponent implements AfterViewInit {
     const dates = this.generateDateRange(resolution, entries);
 
     return dates.map(date => {
-      const dateKey = date.toISOString().split('T')[0];
+      const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
       const hours = entriesMap.get(dateKey) || 0;
       const displayDate = date.toLocaleDateString(undefined, {
         month: 'short',
@@ -90,9 +91,10 @@ export class ChartComponent implements AfterViewInit {
     return dates;
   }
 
-  private getIonicColor(cssVariable: string): string {
+  private getIonicColor(): string {
+    let colorRGB = `--ion-color-${themeColor()}-rgb`;
     return getComputedStyle(document.documentElement)
-      .getPropertyValue(cssVariable)
+      .getPropertyValue(colorRGB)
       .trim();
   }
 
@@ -101,7 +103,7 @@ export class ChartComponent implements AfterViewInit {
       this.chartInstance.destroy();
     }
 
-    const primaryColorRgb = this.getIonicColor('--ion-color-primary-rgb');
+    const primaryColorRgb = this.getIonicColor();
 
     this.chartInstance = new Chart<'bar', { x: string; y: number }[]>(this.chartCanvas.nativeElement, {
       type: 'bar',

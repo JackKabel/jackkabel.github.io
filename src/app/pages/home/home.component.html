@@ -1,14 +1,13 @@
 <ion-tabs>
-  <ion-tab-bar slot="bottom" class="height">
-    <ion-tab-button tab="about" [selected]="true">
-      <ion-icon name="home-outline"></ion-icon>
+  <ion-tab-bar #tabBar slot="bottom" class="tabs">
+    <ion-tab-button tab="about">
+      <ion-icon [name]="tabBar.selectedTab === 'about' ? 'home' : 'home-outline'"></ion-icon>
     </ion-tab-button>
-    <ion-tab-button tab="dashboard" id="anchor-tab">
-      <ion-icon name="stats-chart-outline"></ion-icon>
+    <ion-tab-button tab="dashboard" id="anchor-tab" [selected]="true">
+      <ion-icon [name]="tabBar.selectedTab === 'dashboard' ? 'stats-chart' : 'stats-chart-outline'"></ion-icon>
     </ion-tab-button>
     <ion-tab-button tab="settings">
-      <ion-badge *ngIf="!isStandalone" color="warning">!</ion-badge>
-      <ion-icon name="settings-outline"></ion-icon>
+      <ion-icon [name]="tabBar.selectedTab === 'settings' ? 'settings' : 'settings-outline'"></ion-icon>
     </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>

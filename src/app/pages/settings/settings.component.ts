@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {
+  IonAccordion, IonAccordionGroup,
   IonBadge,
   IonButton,
   IonCard,
@@ -17,8 +18,10 @@ import {
 } from '@ionic/angular/standalone';
 import {WorkEntryService} from '../../core/work-entry.service';
 import {StandaloneService} from '../../core/standalone.service';
-import {NgIf} from '@angular/common';
+import {DatePipe, NgIf} from '@angular/common';
 import {AnalyticService} from '../../core/analytic.service';
+import {ThemeAndColorComponent} from '../../features/theme-and-color/theme-and-color.component';
+import {themeColor} from '../../models/theme-color.model';
 
 @Component({
   selector: 'app-settings',
@@ -39,7 +42,11 @@ import {AnalyticService} from '../../core/analytic.service';
     IonIcon,
     IonContent,
     IonBadge,
-    NgIf
+    NgIf,
+    ThemeAndColorComponent,
+    IonAccordion,
+    DatePipe,
+    IonAccordionGroup
   ]
 })
 export class SettingsComponent implements OnInit {
@@ -84,4 +91,6 @@ export class SettingsComponent implements OnInit {
       });
     }
   }
+
+  protected readonly themeColor = themeColor;
 }
