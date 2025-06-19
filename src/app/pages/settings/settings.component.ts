@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {
-  IonAccordion, IonAccordionGroup,
+  IonAccordion,
+  IonAccordionGroup,
   IonBadge,
   IonButton,
   IonCard,
@@ -18,7 +19,7 @@ import {
 } from '@ionic/angular/standalone';
 import {WorkEntryService} from '../../core/work-entry.service';
 import {StandaloneService} from '../../core/standalone.service';
-import {DatePipe, NgIf} from '@angular/common';
+import {NgIf} from '@angular/common';
 import {AnalyticService} from '../../core/analytic.service';
 import {ThemeAndColorComponent} from '../../features/theme-and-color/theme-and-color.component';
 import {themeColor} from '../../models/theme-color.model';
@@ -45,7 +46,6 @@ import {themeColor} from '../../models/theme-color.model';
     NgIf,
     ThemeAndColorComponent,
     IonAccordion,
-    DatePipe,
     IonAccordionGroup
   ]
 })
@@ -54,6 +54,7 @@ export class SettingsComponent implements OnInit {
   isToastOpen: boolean = false;
   installPromptEvent: any;
   isStandalone = false;
+  protected readonly themeColor = themeColor;
 
   constructor(private workEntryService: WorkEntryService,
               protected standaloneService: StandaloneService,
@@ -91,6 +92,4 @@ export class SettingsComponent implements OnInit {
       });
     }
   }
-
-  protected readonly themeColor = themeColor;
 }
