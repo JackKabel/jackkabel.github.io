@@ -19,6 +19,7 @@ import {FormsModule} from '@angular/forms';
 import {WorkEntryService} from '../../core/work-entry.service';
 import {WorkEntry} from '../../models/work-entry.model';
 import {CommonModule} from '@angular/common';
+import {themeColor} from "../../models/theme-color.model";
 
 @Component({
   selector: 'app-add-new-entry-modal',
@@ -126,4 +127,6 @@ export class AddNewEntryModalComponent implements OnInit {
 
     await toast.present();
   }
+
+    protected readonly themeColor = themeColor;
 }

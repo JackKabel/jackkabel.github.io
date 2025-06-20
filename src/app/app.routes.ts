@@ -6,7 +6,7 @@ import {ModalController} from '@ionic/angular/standalone';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home/about',
+    redirectTo: 'home/dashboard',
     pathMatch: 'full'
   },
   {

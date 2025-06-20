@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {IonIcon, IonTabBar, IonTabButton, IonTabs} from '@ionic/angular/standalone';
+import {IonIcon, IonTabBar, IonTabButton, IonTabs, IonText} from '@ionic/angular/standalone';
 import {StandaloneService} from '../../core/standalone.service';
 import {themeColor} from "../../models/theme-color.model";
 
@@ -12,7 +12,7 @@ import {themeColor} from "../../models/theme-color.model";
     IonTabBar,
     IonTabButton,
     IonIcon,
-
+    IonText,
   ]
 })
 export class HomeComponent {

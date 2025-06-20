@@ -86,10 +86,10 @@ import {themeColor} from '../../models/theme-color.model';
 })
 export class DashboardComponent implements ViewWillEnter {
   @ViewChild(IonContent) content!: IonContent;
+  @ViewChild('monthAccordionGroup') monthAccordionGroup!: IonAccordionGroup;
   flows = signal<WorkFlow[]>([]);
   entries = signal<WorkEntry[]>([]);
   selectedFlowId = signal<string>('Main');
-  expandedMonth = signal<string | null>(null);
   isLoading = signal<boolean>(true);
   activeFlow = computed(() =>
     this.flows().find(f => f.id === this.selectedFlowId())
@@ -134,9 +134,9 @@ export class DashboardComponent implements ViewWillEnter {
     await this.initializeData();
   }
 
+
   onFlowChange(event: any) {
     this.selectedFlowId.set(event.detail.value);
-    this.expandedMonth.set(null);
   }
 
   async editEntry(entry: WorkEntry) {
@@ -152,11 +152,7 @@ export class DashboardComponent implements ViewWillEnter {
 
     modal.onWillDismiss().then((result) => {
       if (result.role === 'saved') {
-        this.handleRefresh().then(() => {
-          const current = this.expandedMonth();
-          this.expandedMonth.set(null);
-          setTimeout(() => this.expandedMonth.set(current), 0);
-        });
+        this.handleRefresh();
       }
     })
   }
@@ -167,11 +163,7 @@ export class DashboardComponent implements ViewWillEnter {
       await this.workService.deleteEntry(entry.id);
       if (notification) {
         void this.presentToast('Entry deleted successfully', 'success');
-        void this.handleRefresh().then(() => {
-          const current = this.expandedMonth();
-          this.expandedMonth.set(null);
-          setTimeout(() => this.expandedMonth.set(current), 0);
-        });
+        void this.handleRefresh()
       }
     } catch (error) {
       void this.presentToast('Error deleting entry', 'danger');
@@ -319,6 +311,7 @@ export class DashboardComponent implements ViewWillEnter {
     } finally {
       await loading.dismiss();
       this.isLoading.set(false);
+      this.monthAccordionGroup.value = undefined;
     }
   }
 }

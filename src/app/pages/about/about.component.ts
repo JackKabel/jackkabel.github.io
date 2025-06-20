@@ -17,7 +17,10 @@ import {themeColor} from '../../models/theme-color.model';
   ]
 })
 export class AboutComponent {
-
   protected readonly themeColor = themeColor;
+
+  goTo() {
+    window.open('https://www.linkedin.com/in/antal-t-abel/', '_blank');
+  }
 }
 

@@ -1,14 +1,14 @@
 <ion-header>
   <ion-toolbar>
-    <ion-segment
-      (ionChange)="onFlowChange($event)"
-      [(ngModel)]="selectedFlowId"
-      scrollable="true">
+    <ion-segment (ionChange)="onFlowChange($event)"
+                 [(ngModel)]="selectedFlowId"
+                 [color]="themeColor()"
+                 scrollable="true">
       <ion-segment-button *ngFor="let flow of flows()" [value]="flow.id">
         <ion-label>{{ flow.name }}</ion-label>
       </ion-segment-button>
     </ion-segment>
-    <ion-button (click)="presentFlowModal()" [color]="themeColor()" fill="clear" size="small">
+    <ion-button (click)="presentFlowModal()" [color]="themeColor()" fill="clear" size="small" slot="end">
       <ion-icon name="add-outline" slot="icon-only"></ion-icon>
     </ion-button>
   </ion-toolbar>
@@ -19,93 +19,94 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <div class="layout">
-  <ion-card class="flow-card" >
-    <ion-button [color]="themeColor()" class="more" fill="clear" id="context-menu-trigger" size="small">
-      <ion-icon name="ellipsis-vertical-outline" slot="icon-only"></ion-icon>
-    </ion-button>
-    <ion-card-header>
-      <ion-card-title [color]="themeColor()">
-        {{ activeFlow()?.name }}
-      </ion-card-title>
-      <ion-card-subtitle>
-        {{ activeFlow()?.description }}
-      </ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      <div class="chart">
-        <ion-segment (ionChange)="onSegmentChange($event)" [color]="themeColor()" value="7">
-          <ion-segment-button value="7">
-            <ion-label>Week</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="30">
-            <ion-label>Month</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="0">
-            <ion-label>All</ion-label>
-          </ion-segment-button>
-        </ion-segment>
-        <app-chart [entries]="chartData" [resolution]="chartResolution"></app-chart>
-      </div>
-      <ion-button [color]="themeColor()" (click)="presentEntryModal()" [expand]="'block'">
-        <span>Add Entry</span>
+    <ion-card class="flow-card">
+      <ion-button [color]="themeColor()" class="more" fill="clear" id="context-menu-trigger" size="small">
+        <ion-icon name="ellipsis-vertical-outline" slot="icon-only"></ion-icon>
       </ion-button>
-    </ion-card-content>
-  </ion-card>
-  <div *ngIf="activeFlow()" class="accordions">
-    <ion-accordion-group (ionChange)="expandedMonth.set($event.detail.value)" [value]="expandedMonth()">
-      <ion-accordion *ngFor="let month of monthlyEntries() | keyvalue: reverseKeyValue" [value]="month.key">
-        <ion-item color="light" slot="header">
-          <ion-icon name="calendar-outline" slot="start"></ion-icon>
-          <ion-label>
-            <h2>{{ month.key | date:'MMMM yyyy' }}</h2>
-            <p>{{ month.value.length }} entries • {{ getTotalHoursForMonth(month.value) }} hours</p>
-          </ion-label>
-          <ion-badge slot="end" [color]="themeColor()">
-            {{ getTotalHoursForMonth(month.value) }}h
-          </ion-badge>
-        </ion-item>
-        <ion-list slot="content">
-          <ion-item-sliding #slideOptions *ngFor="let entry of month.value; trackBy: trackByEntry">
-            <ion-item>
-              <div class="entry-content">
-                <div class="entry-header">
-                  <h3 class="entry-date">
-                    <ion-text [color]="isWeekend(entry.date) ? 'danger' : 'dark'">
-                      {{ entry.date | date:'MMM d' }}
-                    </ion-text>
-                    <ion-text class="day-name" color="medium">
-                      {{ entry.date | date:'EEE' }}
-                    </ion-text>
-                  </h3>
-                  <div class="entry-hours">
-                    <ion-text>{{ entry.hours }}h</ion-text>
-                    <ion-button [color]="themeColor()" (click)="slideOptions.open('end')" fill="clear" id="trigger-options" size="normal">
-                      <ion-icon name="ellipsis-vertical-outline" slot="icon-only"></ion-icon>
-                    </ion-button>
+      <ion-card-header>
+        <ion-card-title [color]="themeColor()">
+          {{ activeFlow()?.name }}
+        </ion-card-title>
+        <ion-card-subtitle>
+          {{ activeFlow()?.description }}
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="chart">
+          <ion-segment (ionChange)="onSegmentChange($event)" [color]="themeColor()" value="7">
+            <ion-segment-button value="7">
+              <ion-label>Week</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="30">
+              <ion-label>Month</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="0">
+              <ion-label>All</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+          <app-chart [entries]="chartData" [resolution]="chartResolution"></app-chart>
+        </div>
+        <ion-button (click)="presentEntryModal()" [color]="themeColor()" [expand]="'block'">
+          <span>Add Entry</span>
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+    <div *ngIf="activeFlow()" class="accordions">
+      <ion-accordion-group #monthAccordionGroup>
+        <ion-accordion *ngFor="let month of monthlyEntries() | keyvalue: reverseKeyValue" [value]="month.key">
+          <ion-item color="light" slot="header">
+            <ion-icon name="calendar-outline" slot="start"></ion-icon>
+            <ion-label>
+              <h2>{{ month.key | date:'MMMM yyyy' }}</h2>
+              <p>{{ month.value.length }} entries • {{ getTotalHoursForMonth(month.value) }} hours</p>
+            </ion-label>
+            <ion-badge [color]="themeColor()" slot="end">
+              {{ getTotalHoursForMonth(month.value) }}h
+            </ion-badge>
+          </ion-item>
+          <ion-list slot="content">
+            <ion-item-sliding #slideOptions *ngFor="let entry of month.value; trackBy: trackByEntry">
+              <ion-item>
+                <div class="entry-content">
+                  <div class="entry-header">
+                    <h3 class="entry-date">
+                      <ion-text [color]="isWeekend(entry.date) ? 'danger' : 'dark'">
+                        {{ entry.date | date:'MMM d' }}
+                      </ion-text>
+                      <ion-text class="day-name" color="medium">
+                        {{ entry.date | date:'EEE' }}
+                      </ion-text>
+                    </h3>
+                    <div class="entry-hours">
+                      <ion-text>{{ entry.hours }}h</ion-text>
+                      <ion-button (click)="slideOptions.open('end')" [color]="themeColor()" fill="clear"
+                                  id="trigger-options" size="normal">
+                        <ion-icon name="ellipsis-vertical-outline" slot="icon-only"></ion-icon>
+                      </ion-button>
+                    </div>
                   </div>
+                  <p *ngIf="entry.note" class="entry-note">{{ entry.note }}</p>
                 </div>
-                <p *ngIf="entry.note" class="entry-note">{{ entry.note }}</p>
-              </div>
-            </ion-item>
+              </ion-item>
 
-            <ion-item-options side="end">
-              <ion-item-option (click)="editEntry(entry)" [color]="themeColor()">
-                <ion-icon name="create-outline" slot="icon-only"></ion-icon>
-              </ion-item-option>
-              <ion-item-option (click)="deleteEntry(entry, true)" color="danger">
-                <ion-icon name="trash-bin-outline" slot="icon-only"></ion-icon>
-              </ion-item-option>
-            </ion-item-options>
-          </ion-item-sliding>
-        </ion-list>
-      </ion-accordion>
-    </ion-accordion-group>
-  </div>
-  <div *ngIf="!activeFlow() || monthlyEntries().size === 0" class="empty-state">
-    <ion-icon color="medium" name="document-text-outline" size="large"></ion-icon>
-    <h3>No entries yet</h3>
-    <p>Start tracking your work hours for {{ activeFlow()?.name || 'this flow' }}</p>
-  </div>
+              <ion-item-options side="end">
+                <ion-item-option (click)="editEntry(entry)" [color]="themeColor()">
+                  <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+                </ion-item-option>
+                <ion-item-option (click)="deleteEntry(entry, true)" color="danger">
+                  <ion-icon name="trash-bin-outline" slot="icon-only"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+            </ion-item-sliding>
+          </ion-list>
+        </ion-accordion>
+      </ion-accordion-group>
+    </div>
+    <div *ngIf="!activeFlow() || monthlyEntries().size === 0" class="empty-state">
+      <ion-icon color="medium" name="document-text-outline" size="large"></ion-icon>
+      <h3>No entries yet</h3>
+      <p>Start tracking your work hours for {{ activeFlow()?.name || 'this flow' }}</p>
+    </div>
   </div>
   <ion-loading [isOpen]="isLoading()" spinner="crescent"></ion-loading>
   <ion-popover #popover trigger="context-menu-trigger" triggerAction="click">
@@ -123,3 +124,9 @@
     </ng-template>
   </ion-popover>
 </ion-content>
+
+<div class="refresh-tut">
+  <ion-text>Swipe down to refresh</ion-text>
+  <ion-icon name="chevron-down"></ion-icon>
+</div>
+

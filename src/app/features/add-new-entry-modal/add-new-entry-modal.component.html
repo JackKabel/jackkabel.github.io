@@ -7,11 +7,11 @@
 <ion-content class="ion-padding">
   <ion-item>
     <ion-label position="stacked">Date</ion-label>
-    <ion-datetime [(ngModel)]="date" [max]="maxDate" firstDayOfWeek="1" presentation="date"></ion-datetime>
+    <ion-datetime [color]="themeColor()" [(ngModel)]="date" [max]="maxDate" firstDayOfWeek="1" presentation="date"></ion-datetime>
   </ion-item>
   <ion-item>
     <ion-label position="stacked">Hours</ion-label>
-    <ion-input [(ngModel)]="hours" max="24" min="0.5" placeholder="8" step="0.5" type="number"></ion-input>
+    <ion-input [color]="themeColor()" [(ngModel)]="hours" max="24" min="0.5" placeholder="8" step="0.5" type="number"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label position="stacked">Note (optional)</ion-label>
@@ -27,7 +27,7 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="saveEntry()" [disabled]="!isFormValid()">
+      <ion-button (click)="saveEntry()" [disabled]="!isFormValid()" [color]="themeColor()">
         Save
       </ion-button>
     </ion-buttons>

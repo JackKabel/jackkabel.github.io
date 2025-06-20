@@ -27,8 +27,13 @@
       Fully functional <strong>offline</strong>, so you can track hours anywhere, anytime.
     </p>
   </div>
+  <ion-badge class="ion-margin ion-padding author" (click)="goTo()" color="light" slot="fixed">
+    <ion-text [color]="themeColor()">
+      <span>Linked</span><ion-icon name="logo-linkedin"></ion-icon>
+    </ion-text>
+  </ion-badge>
   <ion-badge class="ion-margin ion-padding" color="light" slot="fixed">
-    <ion-text [color]="themeColor()">Version: 0.0.19</ion-text>
+    <ion-text [color]="themeColor()">Version: 0.0.20</ion-text>
   </ion-badge>
 </ion-content>
 

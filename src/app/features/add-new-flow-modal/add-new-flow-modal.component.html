@@ -33,6 +33,7 @@
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-button
+        [color]="themeColor()"
         (click)="saveFlow()"
         [disabled]="!isFormValid()">
         {{ this.oldFlow ? 'Update Flow' : 'Save Flow' }}

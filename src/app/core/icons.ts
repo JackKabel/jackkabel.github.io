@@ -10,6 +10,7 @@ import {
   calendarOutline,
   flashOutline,
   cloudOfflineOutline,
+  informationCircle,
   informationCircleOutline,
   checkmarkCircleOutline,
   checkmarkCircle,
@@ -29,7 +30,8 @@ import {
   createOutline,
   trashBinOutline,
   ellipsisVerticalOutline,
-  arrowDown
+  chevronDown,
+  logoLinkedin
 } from 'ionicons/icons';
 
 export function registerIcons() {
@@ -44,6 +46,7 @@ export function registerIcons() {
     calendarOutline,
     flashOutline,
     cloudOfflineOutline,
+    informationCircle,
     informationCircleOutline,
     checkmarkCircleOutline,
     checkmarkCircle,
@@ -63,6 +66,7 @@ export function registerIcons() {
     createOutline,
     trashBinOutline,
     ellipsisVerticalOutline,
-    arrowDown
+    chevronDown,
+    logoLinkedin
   });
 }

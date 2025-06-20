@@ -18,6 +18,7 @@ import {
 import {WorkEntryService} from '../../core/work-entry.service';
 import {WorkFlow} from '../../models/work-flow.model';
 import {CommonModule} from '@angular/common';
+import {themeColor} from "../../models/theme-color.model";
 
 @Component({
   selector: 'app-add-new-flow-modal',
@@ -105,4 +106,6 @@ export class AddNewFlowModalComponent implements OnInit {
 
     await toast.present();
   }
+
+    protected readonly themeColor = themeColor;
 }
