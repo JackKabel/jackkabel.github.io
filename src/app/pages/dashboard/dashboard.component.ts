@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal, ViewChild} from '@angular/core';
+import {Component, computed, ElementRef, inject, signal, ViewChild} from '@angular/core';
 import {
   IonAccordion,
   IonAccordionGroup,
@@ -42,6 +42,8 @@ import {AddNewFlowModalComponent} from '../../features/add-new-flow-modal/add-ne
 import {AnalyticService} from '../../core/analytic.service';
 import {ChartComponent} from '../../shared/chart/chart.component';
 import {themeColor} from '../../models/theme-color.model';
+import {Gesture, GestureController} from '@ionic/angular';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -87,6 +89,7 @@ import {themeColor} from '../../models/theme-color.model';
 export class DashboardComponent implements ViewWillEnter {
   @ViewChild(IonContent) content!: IonContent;
   @ViewChild('monthAccordionGroup') monthAccordionGroup!: IonAccordionGroup;
+  @ViewChild('swipeArea', {static: false}) swipeArea!: ElementRef;
   flows = signal<WorkFlow[]>([]);
   entries = signal<WorkEntry[]>([]);
   selectedFlowId = signal<string>('Main');
@@ -119,12 +122,14 @@ export class DashboardComponent implements ViewWillEnter {
 
     return grouped;
   });
-
+  gestureDone = signal({show: false, direction: ''});
   private workService = inject(WorkEntryService);
   private modalController = inject(ModalController);
   private loadingController = inject(LoadingController);
   private toastController = inject(ToastController);
   private analytics = inject(AnalyticService);
+  private gestureCtrl = inject(GestureController);
+  private gesture?: Gesture;
 
   public reverseKeyValue = (a: any, b: any) => {
     return b.key.localeCompare(a.key);
@@ -132,8 +137,49 @@ export class DashboardComponent implements ViewWillEnter {
 
   async ionViewWillEnter() {
     await this.initializeData();
+    setTimeout(() => this.setGesture(), 0);
   }
 
+  setGesture() {
+    this.gesture?.destroy();
+
+    this.gesture = this.gestureCtrl.create({
+      el: this.swipeArea.nativeElement,
+      gestureName: 'flow-swipe',
+      threshold: 10,
+      onEnd: ev => {
+        if (ev.deltaX > 50) {
+          this.prevFlow();
+        } else if (ev.deltaX < -50) {
+          this.nextFlow();
+        }
+      }
+    });
+    this.gesture.enable();
+  }
+
+  prevFlow() {
+    this.animate('right');
+    this.selectedFlowId.update((current) => {
+      const index = this.flows().findIndex(f => f.id === current);
+      return this.flows()[index - 1]?.id || this.flows()[this.flows().length - 1].id
+    })
+  }
+
+  nextFlow() {
+    this.animate('left');
+    this.selectedFlowId.update((current) => {
+      const index = this.flows().findIndex(f => f.id === current);
+      return this.flows()[index + 1]?.id || this.flows()[0].id
+    })
+  }
+
+  animate(direction: 'left' | 'right') {
+    this.gestureDone.update(() => {
+      return {show: true, direction: direction}
+    });
+    setTimeout(() => this.gestureDone.set({show: false, direction: ''}), 500);
+  }
 
   onFlowChange(event: any) {
     this.selectedFlowId.set(event.detail.value);

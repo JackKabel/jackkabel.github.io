@@ -162,3 +162,29 @@ ion-accordion {
     opacity: 0;
   }
 }
+
+.swipe-container {
+  touch-action: pan-y;
+}
+
+.animate-left {
+  animation: left 300ms ease-in-out forwards;
+}
+
+.animate-right {
+  animation: right 300ms ease-in-out forwards;
+}
+
+@keyframes left {
+  to {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes right {
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}

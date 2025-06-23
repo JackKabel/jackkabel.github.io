@@ -14,11 +14,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" [class.animate-left]="gestureDone().show && gestureDone().direction === 'left'"
+             [class.animate-right]="gestureDone().show && gestureDone().direction === 'right'">
   <ion-refresher (ionRefresh)="handleRefresh($event)" slot="fixed">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <div class="layout">
+  <div class="layout swipe-container" #swipeArea>
     <ion-card class="flow-card">
       <ion-button [color]="themeColor()" class="more" fill="clear" id="context-menu-trigger" size="small">
         <ion-icon name="ellipsis-vertical-outline" slot="icon-only"></ion-icon>
@@ -129,4 +130,3 @@
   <ion-text>Swipe down to refresh</ion-text>
   <ion-icon name="chevron-down"></ion-icon>
 </div>
-
