@@ -5,8 +5,8 @@
     [value]="selectedCameraId"
     [disabled]="isLoading || cameras.length === 0"
     (ionChange)="onCameraSelected($event)">
-    <ion-select-option *ngFor="let cam of cameras" [value]="cam.id">
-      {{ cam.label || 'Camera ' + cam.id }}
+    <ion-select-option *ngFor="let cam of cameras; let i = index" [value]="cam.id">
+      {{ getCameraLabel(cam, i) }}
     </ion-select-option>
   </ion-select>
 

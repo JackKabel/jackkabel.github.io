@@ -15,7 +15,7 @@ import {
   selector: 'app-qr-scanner',
   templateUrl: './qr-scanner.component.html',
   styleUrls: ['./qr-scanner.component.scss'],
-  imports: [NgIf, IonIcon, IonSelect, IonSelectOption, NgForOf, IonSpinner, IonButton],
+  imports: [NgIf, IonIcon, IonSelect, IonSelectOption, NgForOf, IonButton, IonSpinner],
 })
 export class QrScannerComponent implements ViewWillEnter, ViewWillLeave, OnDestroy {
   @ViewChild('qrCodeContainer') qrCodeContainer!: ElementRef;
@@ -38,30 +38,55 @@ export class QrScannerComponent implements ViewWillEnter, ViewWillLeave, OnDestr
   }
 
   ngOnDestroy(): void {
-    void this.cleanup();
+    this.cleanup();
   }
 
   private async initializeScanner(): Promise<void> {
     try {
+      // Reset state
       this.qrResult = null;
       this.selectedCameraId = null;
       this.isLoading = true;
 
+      // Ensure any existing scanner is fully cleaned up
       await this.cleanup();
 
+      // Small delay to ensure DOM is ready
       await new Promise(resolve => setTimeout(resolve, 100));
 
+      // Create new instance
       this.html5QrCode = new Html5Qrcode(this.QR_REGION_ID);
 
+      // Get available cameras
       const cameras = await Html5Qrcode.getCameras();
       this.cameras = cameras;
 
+      // iOS-specific camera selection logic
       if (cameras.length > 0) {
-        const backCamera = cameras.find(cam =>
-          cam.label?.toLowerCase().includes('back') ||
-          cam.label?.toLowerCase().includes('rear')
-        );
-        this.selectedCameraId = backCamera?.id || cameras[0].id;
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+        if (isIOS) {
+          // On iOS, prefer environment camera (back camera)
+          const backCamera = cameras.find(cam =>
+            cam.label?.toLowerCase().includes('back') ||
+            cam.label?.toLowerCase().includes('rear') ||
+            cam.label?.toLowerCase().includes('environment')
+          );
+
+          // If no back camera found, try to identify by camera index
+          // Usually camera 0 is front, camera 1 is back on iOS
+          const fallbackBackCamera = cameras.length > 1 ? cameras[1] : cameras[0];
+
+          this.selectedCameraId = backCamera?.id || fallbackBackCamera.id;
+        } else {
+          // Non-iOS logic (original)
+          const backCamera = cameras.find(cam =>
+            cam.label?.toLowerCase().includes('back') ||
+            cam.label?.toLowerCase().includes('rear')
+          );
+          this.selectedCameraId = backCamera?.id || cameras[0].id;
+        }
+
         await this.startScannerWithCamera(this.selectedCameraId);
       }
     } catch (error) {
@@ -81,39 +106,80 @@ export class QrScannerComponent implements ViewWillEnter, ViewWillLeave, OnDestr
     if (!this.html5QrCode || this.isScanning) return;
 
     try {
+      // Stop any existing scan first
       if (this.isScanning) {
         await this.stopScanner();
       }
 
+      // Force complete cleanup and recreation for iOS camera switching
+      await this.html5QrCode.clear();
+
+      // Small delay to ensure cleanup is complete
+      await new Promise(resolve => setTimeout(resolve, 200));
+
       this.isScanning = true;
 
+      // Use different configuration for iOS
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+      const config = {
+        fps: isIOS ? 5 : 10, // Lower FPS for iOS
+        qrbox: { width: 250, height: 250 },
+        aspectRatio: 1.0,
+        ...(isIOS && {
+          // iOS specific configurations
+          experimentalFeatures: {
+            useBarCodeDetectorIfSupported: false
+          }
+        })
+      };
+
+      // For iOS, try using facingMode constraint instead of deviceId
+      let cameraConstraint;
+      if (isIOS) {
+        const selectedCamera = this.cameras.find(cam => cam.id === cameraId);
+        const isBackCamera = selectedCamera?.label?.toLowerCase().includes('back') ||
+          selectedCamera?.label?.toLowerCase().includes('rear') ||
+          selectedCamera?.label?.toLowerCase().includes('environment');
+
+        cameraConstraint = { facingMode: isBackCamera ? 'environment' : 'user' };
+      } else {
+        cameraConstraint = cameraId;
+      }
+
       await this.html5QrCode.start(
-        cameraId,
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
-          aspectRatio: 1.0
-        },
+        cameraConstraint,
+        config,
         (decodedText) => {
           this.qrResult = decodedText;
-          this.stopScanner();
+          this.stopScanner(); // Stop scanning after successful read
         },
         (errorMessage) => {
-          if (!errorMessage.includes('No MultiFormat Readers')) {
+          // Only log actual errors, not "No QR code found" messages
+          if (!errorMessage.includes('No MultiFormat Readers') &&
+            !errorMessage.includes('NotFoundException')) {
             console.warn('QR scan error:', errorMessage);
           }
         }
       );
 
+      // Style the video element once it's available
       this.styleVideoElement();
 
     } catch (error) {
       console.error('Failed to start camera:', error);
       this.isScanning = false;
+
+      // If initial attempt fails on iOS, try fallback approach
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        console.log('Attempting iOS fallback camera selection...');
+        await this.fallbackCameraStart(cameraId);
+      }
     }
   }
 
   private styleVideoElement(): void {
+    // Clean up any existing observer
     if (this.mutationObserver) {
       this.mutationObserver.disconnect();
     }
@@ -126,6 +192,7 @@ export class QrScannerComponent implements ViewWillEnter, ViewWillLeave, OnDestr
         video.style.objectFit = 'cover';
         video.style.borderRadius = '12px';
 
+        // Stop observing once we've styled the video
         if (this.mutationObserver) {
           this.mutationObserver.disconnect();
           this.mutationObserver = undefined;
@@ -154,17 +221,19 @@ export class QrScannerComponent implements ViewWillEnter, ViewWillLeave, OnDestr
   }
 
   private async cleanup(): Promise<void> {
+    // Clean up mutation observer
     if (this.mutationObserver) {
       this.mutationObserver.disconnect();
       this.mutationObserver = undefined;
     }
 
+    // Stop and clear scanner
     if (this.html5QrCode) {
       try {
         if (this.isScanning) {
           await this.html5QrCode.stop();
         }
-        this.html5QrCode.clear();
+        await this.html5QrCode.clear();
       } catch (error) {
         console.warn('Error during cleanup:', error);
       } finally {
@@ -174,10 +243,82 @@ export class QrScannerComponent implements ViewWillEnter, ViewWillLeave, OnDestr
     }
   }
 
+  // Method to restart scanning after successful scan
   async restartScanning(): Promise<void> {
     this.qrResult = null;
     if (this.selectedCameraId) {
       await this.startScannerWithCamera(this.selectedCameraId);
+    }
+  }
+
+  // Helper method to get user-friendly camera labels
+  getCameraLabel(camera: CameraDevice, index: number): string {
+    if (camera.label) {
+      // Clean up common camera label patterns
+      let label = camera.label;
+
+      // Replace common patterns with user-friendly names
+      if (label.toLowerCase().includes('back') || label.toLowerCase().includes('rear') || label.toLowerCase().includes('environment')) {
+        return 'Back Camera';
+      } else if (label.toLowerCase().includes('front') || label.toLowerCase().includes('user') || label.toLowerCase().includes('face')) {
+        return 'Front Camera';
+      }
+
+      return label;
+    }
+
+    // Fallback labels based on typical iOS camera ordering
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      return index === 0 ? 'Front Camera' : 'Back Camera';
+    }
+
+    return `Camera ${index + 1}`;
+  }
+
+  // Fallback method for iOS camera switching
+  private async fallbackCameraStart(cameraId: string): Promise<void> {
+    try {
+      // Force complete recreation of the Html5Qrcode instance
+      await this.cleanup();
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      this.html5QrCode = new Html5Qrcode(this.QR_REGION_ID);
+
+      // Try with getUserMedia constraints directly
+      const selectedCamera = this.cameras.find(cam => cam.id === cameraId);
+      const constraints = {
+        video: {
+          deviceId: { exact: cameraId },
+          facingMode: selectedCamera?.label?.toLowerCase().includes('back') ? 'environment' : 'user'
+        }
+      };
+
+      // Test if camera is accessible
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      stream.getTracks().forEach(track => track.stop()); // Stop test stream
+
+      // Now start with html5-qrcode
+      this.isScanning = true;
+      await this.html5QrCode.start(
+        cameraId,
+        { fps: 5, qrbox: { width: 250, height: 250 } },
+        (decodedText) => {
+          this.qrResult = decodedText;
+          this.stopScanner();
+        },
+        (errorMessage) => {
+          if (!errorMessage.includes('No MultiFormat Readers') &&
+            !errorMessage.includes('NotFoundException')) {
+            console.warn('QR scan error:', errorMessage);
+          }
+        }
+      );
+
+      this.styleVideoElement();
+    } catch (error) {
+      console.error('Fallback camera start failed:', error);
+      this.isScanning = false;
     }
   }
 }
