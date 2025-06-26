@@ -91,7 +91,6 @@ export class QrScannerComponent implements ViewWillEnter, ViewWillLeave, OnDestr
             constraint,
             {
               fps: 10,
-              qrbox: {width: 250, height: 250},
               aspectRatio: 1.0
             },
             (decodedText) => {
