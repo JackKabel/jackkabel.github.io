@@ -33,7 +33,9 @@ import {
   chevronDown,
   logoLinkedin,
   qrCode,
-  qrCodeOutline
+  qrCodeOutline,
+  cameraOutline,
+  refreshOutline
 } from 'ionicons/icons';
 
 export function registerIcons() {
@@ -71,6 +73,8 @@ export function registerIcons() {
     chevronDown,
     logoLinkedin,
     qrCode,
-    qrCodeOutline
+    qrCodeOutline,
+    cameraOutline,
+    refreshOutline
   });
 }

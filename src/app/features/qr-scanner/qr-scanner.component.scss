@@ -1,10 +1,9 @@
-.qr-container {
+.qr-scanner {
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
-  text-align: center;
-  background-color: var(--ion-background-color);
+  gap: 1rem;
 }
 
 .scanner-box {
@@ -15,16 +14,81 @@
   border-radius: 12px;
   overflow: hidden;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-container,
+.no-camera-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--ion-color-medium);
+  text-align: center;
+  padding: 2rem;
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
 }
 
 .qr-result {
-  color: var(--ion-color-dark);
-  font-size: 1rem;
-  margin-top: 0.5rem;
-  word-break: break-word;
+  width: 100%;
+  max-width: 320px;
+  border: 1px solid var(--ion-color-light-shade);
+  border-radius: 8px;
+  background: var(--ion-color-light);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-  ion-icon {
-    vertical-align: middle;
-    margin-right: 0.25rem;
+  .result-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--ion-color-primary);
+    color: var(--ion-color-primary-contrast);
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    ion-icon {
+      font-size: 1.1rem;
+    }
+  }
+
+  .result-content {
+    padding: 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    word-break: break-all;
+    background: var(--ion-color-light);
+    color: var(--ion-color-dark);
+    border-bottom: 1px solid var(--ion-color-light-shade);
+  }
+
+  .result-actions {
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: center;
+    background: var(--ion-color-light-tint);
+
+    ion-button {
+      --color: var(--ion-color-primary);
+      font-size: 0.85rem;
+    }
+  }
+}
+
+.scan-instructions {
+  text-align: center;
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+
+  p {
+    margin: 0;
   }
 }

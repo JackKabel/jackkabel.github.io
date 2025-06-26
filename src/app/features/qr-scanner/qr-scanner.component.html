@@ -1,8 +1,43 @@
-<div class="qr-container">
-  <div class="scanner-box" #qrCodeContainer id="qr-code-region"></div>
+<div class="qr-scanner">
+  <ion-select
+    placeholder="Select Camera"
+    interface="popover"
+    [value]="selectedCameraId"
+    [disabled]="isLoading || cameras.length === 0"
+    (ionChange)="onCameraSelected($event)">
+    <ion-select-option *ngFor="let cam of cameras" [value]="cam.id">
+      {{ cam.label || 'Camera ' + cam.id }}
+    </ion-select-option>
+  </ion-select>
 
-  <p class="qr-result" *ngIf="qrResult">
-    <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
-    Scanned: <strong>{{ qrResult }}</strong>
-  </p>
+  <div #qrCodeContainer id="qr-code-region" class="scanner-box">
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Initializing camera...</p>
+    </div>
+    <div *ngIf="!isLoading && cameras.length === 0" class="no-camera-container">
+      <ion-icon name="camera-outline" size="large"></ion-icon>
+      <p>No cameras available</p>
+    </div>
+  </div>
+
+  <div *ngIf="qrResult" class="qr-result">
+    <div class="result-header">
+      <ion-icon name="qr-code-outline"></ion-icon>
+      <span>QR Code Detected</span>
+    </div>
+    <div class="result-content">
+      {{ qrResult }}
+    </div>
+    <div class="result-actions">
+      <ion-button fill="clear" size="small" (click)="restartScanning()">
+        <ion-icon name="scan-outline" slot="start"></ion-icon>
+        Scan Another
+      </ion-button>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !qrResult && selectedCameraId" class="scan-instructions">
+    <p>Point your camera at a QR code to scan it</p>
+  </div>
 </div>
