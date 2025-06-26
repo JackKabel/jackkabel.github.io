@@ -20,9 +20,18 @@ export class QrScannerComponent implements ViewWillEnter, ViewWillLeave {
 
     Html5Qrcode.getCameras().then(cameras => {
       if (cameras && cameras.length) {
+        // Try to find the back camera
+        const backCamera = cameras.find(cam =>
+          cam.label.toLowerCase().includes('back') ||
+          cam.label.toLowerCase().includes('rear') ||
+          cam.label.toLowerCase().includes('environment')
+        );
+
+        const selectedCameraId = backCamera?.id || cameras[0].id;
+
         this.html5QrCode?.start(
-          cameras[0].id,
-          {fps: 10, qrbox: 250},
+          selectedCameraId,
+          { fps: 10, qrbox: 250 },
           (decodedText) => {
             this.qrResult = decodedText;
             this.html5QrCode?.stop();
