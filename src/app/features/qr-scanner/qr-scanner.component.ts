@@ -15,7 +15,7 @@ import {
   selector: 'app-qr-scanner',
   templateUrl: './qr-scanner.component.html',
   styleUrls: ['./qr-scanner.component.scss'],
-  imports: [NgIf, IonIcon, IonSelect, IonSelectOption, NgForOf, IonButton, IonSpinner],
+  imports: [NgIf, IonIcon, IonSelect, IonSelectOption, NgForOf, IonSpinner, IonButton],
 })
 export class QrScannerComponent implements ViewWillEnter, ViewWillLeave, OnDestroy {
   @ViewChild('qrCodeContainer') qrCodeContainer!: ElementRef;
