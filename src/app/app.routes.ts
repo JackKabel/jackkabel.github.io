@@ -28,6 +28,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/settings/settings.component').then(m => m.SettingsComponent),
       },
+      {
+        path: 'qr',
+        loadComponent: () =>
+          import('./features/qr-scanner/qr-scanner.component').then(m => m.QrScannerComponent),
+      }
     ]
   },
 ];

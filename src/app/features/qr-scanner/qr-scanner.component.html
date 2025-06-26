@@ -1,0 +1,8 @@
+<div class="qr-container">
+  <div class="scanner-box" #qrCodeContainer id="qr-code-region"></div>
+
+  <p class="qr-result" *ngIf="qrResult">
+    <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+    Scanned: <strong>{{ qrResult }}</strong>
+  </p>
+</div>

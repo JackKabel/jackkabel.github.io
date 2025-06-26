@@ -15,5 +15,10 @@
                 [color]="tabBar.selectedTab === 'settings' ? themeColor() : 'medium'"></ion-icon>
       <ion-text [color]="tabBar.selectedTab === 'settings' ? themeColor() : 'medium'">Settings</ion-text>
     </ion-tab-button>
+    <ion-tab-button tab="qr">
+      <ion-icon [name]="tabBar.selectedTab === 'qr' ? 'qr-code' : 'qr-code-outline'"
+                [color]="tabBar.selectedTab === 'qr' ? themeColor() : 'medium'"></ion-icon>
+      <ion-text [color]="tabBar.selectedTab === 'qr' ? themeColor() : 'medium'">QR Scanner</ion-text>
+    </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>

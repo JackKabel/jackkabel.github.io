@@ -31,7 +31,9 @@ import {
   trashBinOutline,
   ellipsisVerticalOutline,
   chevronDown,
-  logoLinkedin
+  logoLinkedin,
+  qrCode,
+  qrCodeOutline
 } from 'ionicons/icons';
 
 export function registerIcons() {
@@ -67,6 +69,8 @@ export function registerIcons() {
     trashBinOutline,
     ellipsisVerticalOutline,
     chevronDown,
-    logoLinkedin
+    logoLinkedin,
+    qrCode,
+    qrCodeOutline
   });
 }
