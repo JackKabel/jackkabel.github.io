@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
 import {NgIf} from '@angular/common';
 import {Html5Qrcode} from 'html5-qrcode';
-import {IonIcon, ViewWillEnter} from '@ionic/angular/standalone';
+import {IonIcon, ViewWillEnter, ViewWillLeave} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-qr-scanner',
@@ -9,7 +9,7 @@ import {IonIcon, ViewWillEnter} from '@ionic/angular/standalone';
   styleUrls: ['./qr-scanner.component.scss'],
   imports: [NgIf, IonIcon],
 })
-export class QrScannerComponent implements ViewWillEnter, OnDestroy {
+export class QrScannerComponent implements ViewWillEnter, ViewWillLeave {
   @ViewChild('qrCodeContainer') qrCodeContainer!: ElementRef;
   qrResult: string | null = null;
   private html5QrCode?: Html5Qrcode;
@@ -54,7 +54,7 @@ export class QrScannerComponent implements ViewWillEnter, OnDestroy {
   }
 
 
-  ngOnDestroy(): void {
+  ionViewWillLeave(): void {
     this.html5QrCode?.stop().then(() => {
       this.html5QrCode?.clear();
     });
