@@ -1,13 +1,21 @@
 import {Component, ElementRef, ViewChild, OnDestroy} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {CameraDevice, Html5Qrcode} from 'html5-qrcode';
-import {IonIcon, IonSelect, IonSelectOption, ViewWillEnter, ViewWillLeave} from '@ionic/angular/standalone';
+import {
+  IonButton,
+  IonIcon,
+  IonSelect,
+  IonSelectOption,
+  IonSpinner,
+  ViewWillEnter,
+  ViewWillLeave
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-qr-scanner',
   templateUrl: './qr-scanner.component.html',
   styleUrls: ['./qr-scanner.component.scss'],
-  imports: [NgIf, IonIcon, IonSelect, IonSelectOption, NgForOf],
+  imports: [NgIf, IonIcon, IonSelect, IonSelectOption, NgForOf, IonSpinner, IonButton],
 })
 export class QrScannerComponent implements ViewWillEnter, ViewWillLeave, OnDestroy {
   @ViewChild('qrCodeContainer') qrCodeContainer!: ElementRef;
